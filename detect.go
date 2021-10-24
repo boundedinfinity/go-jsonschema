@@ -1,14 +1,11 @@
 package jsonschema
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/url"
 	"path"
 	"strings"
-
-	"gopkg.in/yaml.v2"
 )
 
 func (t *System) readContent(uri string, ut JsonSchemaUriType, bs *[]byte) error {
@@ -85,23 +82,6 @@ func (t *System) detectUriType(uri string, ut *JsonSchemaUriType) error {
 
 	if *ut == JsonSchemaUriType_Unknown {
 		return ErrUnknownUriTypeV(uri)
-	}
-
-	return nil
-}
-
-func (t *System) unmarshal(s *JsonSchmea, ft JsonSchemaFileType, bs []byte) error {
-	switch ft {
-	case JsonSchemaFileType_Json:
-		if err := json.Unmarshal(bs, s); err != nil {
-			return err
-		}
-	case JsonSchemaFileType_Yaml:
-		if err := yaml.Unmarshal(bs, s); err != nil {
-			return err
-		}
-	default:
-		return fmt.Errorf("unsupported file type")
 	}
 
 	return nil

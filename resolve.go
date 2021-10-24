@@ -1,121 +1,122 @@
 package jsonschema
 
 import (
-	"net/url"
-	"path"
-
 	"github.com/boundedinfinity/optional"
 )
 
-func (t *System) mapSchema(schema JsonSchmea) error {
-	id, err := url.Parse(schema.Id.Get())
-
-	if err != nil {
-		return err
+func (t *System) mapSchema(schema JsonSchmea, file string) error {
+	if schema.Id.IsDefined() {
+		t.i2l[schema.Id.Get()] = file
+		t.l2i[file] = schema.Id.Get()
+		t.schmeaMap[schema.Id.Get()] = &schema
 	}
 
-	for dname, def := range schema.Defs {
-		fragment, err := url.Parse(path.Join("/", "$defs", dname))
+	for name, obj := range schema.Defs {
+		qname, err := urlJoin(schema.Id.Get(), "$defs", name)
 
 		if err != nil {
 			return err
 		}
 
-		qname := id.ResolveReference(fragment).String()
-
-		if _, ok := t.uriMap[qname]; ok {
+		if _, ok := t.schmeaMap[qname]; ok {
 			return ErrDuplicateDefV(qname)
 		}
 
-		t.uriMap[qname] = def
+		t.schmeaMap[qname] = &obj
 	}
 
-	for name, schema := range schema.Properties {
-		fragment, err := url.Parse(name)
+	switch schema.Type {
+	case JsonSchemaType_String, JsonSchemaType_Number, JsonSchemaType_Integer, JsonSchemaType_Boolean, JsonSchemaType_Null:
+		t.schmeaMap[schema.Id.Get()] = &schema
+	case JsonSchemaType_Object:
+		for name, obj := range schema.Properties {
+			qname, err := urlJoin(schema.Id.Get(), name)
 
-		if err != nil {
-			return err
+			if err != nil {
+				return err
+			}
+
+			if _, ok := t.schmeaMap[qname]; ok {
+				return ErrDuplicateDefV(qname)
+			}
+
+			t.schmeaMap[qname] = &obj
 		}
-
-		qname := id.ResolveReference(fragment).String()
-
-		if _, ok := t.uriMap[qname]; ok {
-			return ErrDuplicateDefV(qname)
-		}
-
-		t.uriMap[qname] = schema
+	case JsonSchemaType_Array:
 	}
 
 	return nil
 }
 
 func (t *System) resolveSchema(schema *JsonSchmea) error {
-	for oname, obj := range t.uriMap {
-		switch obj.Type {
-		case JsonSchemaType_Object:
-			if err := t.resolveObject(*schema, obj); err != nil {
-				return err
-			}
-		case JsonSchemaType_String:
-		case JsonSchemaType_Boolean:
-		case JsonSchemaType_Integer:
-		case JsonSchemaType_Array:
-		case JsonSchemaType_Null:
-		case JsonSchemaType_Number:
-		default:
-			if obj.Ref.IsDefined() {
-				if robj, err := t.getRef(schema.Id, obj.Ref); err != nil {
-					return err
-				} else {
-					t.uriMap[oname] = robj
-				}
-			} else {
-				return ErrUnsupportedSchemaTypeV(obj.Type)
-			}
+	if schema.Ref.IsDefined() {
+		id := schema.Ref.Get()
+		if ref, ok := t.schmeaMap[id]; ok {
+			schema = ref
+		} else {
+			return ErrRefNotFoundV(schema.Ref.Get())
 		}
 	}
+	// switch obj.Type {
+	// case JsonSchemaType_Object:
+
+	// case JsonSchemaType_String:
+	// case JsonSchemaType_Boolean:
+	// case JsonSchemaType_Integer:
+	// case JsonSchemaType_Array:
+	// 	// if err := t.resolveSchema(obj.Items); err != nil {
+	// 	// 	return err
+	// 	// }
+	// case JsonSchemaType_Null:
+	// case JsonSchemaType_Number:
+	// default:
+	// 	if obj.Ref.IsDefined() {
+	// 		if robj, err := t.getRef(schema.Id, obj.Ref); err != nil {
+	// 			return err
+	// 		} else {
+	// 			t.typeMap[oname] = robj
+	// 		}
+	// 	} else {
+	// 		return ErrUnsupportedSchemaTypeV(obj.Type)
+	// 	}
+	// }
 
 	return nil
 }
 
-func (t *System) resolveObject(schema JsonSchmea, obj JsonSchmeaObject) error {
-	for pname, pobj := range obj.Properties {
-		if pobj.Ref.IsDefined() {
-			if robj, err := t.getRef(schema.Id, obj.Ref); err != nil {
-				return err
-			} else {
-				pobj.Properties[pname] = robj
-			}
-		}
-	}
+func (t *System) resolveObject(schema JsonSchmea, obj JsonSchmea) error {
+	// for pname, pobj := range obj.Properties {
+	// 	if pobj.Ref.IsDefined() {
+	// 		if robj, err := t.getRef(schema.Id, obj.Ref); err != nil {
+	// 			return err
+	// 		} else {
+	// 			pobj.Properties[pname] = *robj
+	// 		}
+	// 	}
+	// }
 
 	return nil
 }
 
-func (t *System) getRef(id optional.StringOptional, ref optional.StringOptional) (JsonSchmeaObject, error) {
-	pref, err := url.Parse(ref.Get())
+func (t *System) getRef(id optional.StringOptional, ref optional.StringOptional) (*JsonSchmea, error) {
+	// var key string
 
-	if err != nil {
-		return JsonSchmeaObject{}, err
-	}
+	// if strings.HasPrefix(ref.String(), "#") {
+	// 	idUrl, err := url.Parse(id.Get())
 
-	var key string
+	// 	if err != nil {
+	// 		return &JsonSchmea{}, err
+	// 	}
 
-	if pref.Host != "" {
-		key = pref.String()
-	} else {
-		pid, err := url.Parse(id.Get())
+	// 	idUrl.Path = path.Join(idUrl.Path, strings.TrimPrefix(ref.Get(), "#"))
+	// 	key = idUrl.String()
+	// } else {
+	// 	key = ref.String()
+	// }
 
-		if err != nil {
-			return JsonSchmeaObject{}, err
-		}
+	// if obj, ok := t.typeMap[key]; ok {
+	// 	return obj, nil
+	// }
 
-		key = pid.ResolveReference(pref).String()
-	}
-
-	if obj, ok := t.uriMap[key]; ok {
-		return obj, nil
-	}
-
-	return JsonSchmeaObject{}, ErrRefNotFoundV(ref.Get())
+	return &JsonSchmea{}, ErrRefNotFoundV(ref.Get())
 }

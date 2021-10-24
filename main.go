@@ -1,35 +1,43 @@
 package jsonschema
 
+import "fmt"
+
 func New() *System {
 	return &System{
-		i2l:    make(map[string]string),
-		l2i:    make(map[string]string),
-		uriMap: make(map[string]JsonSchmeaObject),
+		i2l:       make(map[string]string),
+		l2i:       make(map[string]string),
+		schmeaMap: make(map[string]*JsonSchmea),
 	}
 }
 
 type System struct {
-	i2l    map[string]string
-	l2i    map[string]string
-	uriMap map[string]JsonSchmeaObject
+	i2l       map[string]string
+	l2i       map[string]string
+	schmeaMap map[string]*JsonSchmea
 }
 
 func (t *System) LoadSchema(uris ...string) error {
-	for _, uri := range uris {
+	files, err := t.uris2files(uris...)
+
+	if err != nil {
+		return err
+	}
+
+	for _, file := range files {
 		var schema JsonSchmea
 		var uriType JsonSchemaUriType
 		var fileType JsonSchemaFileType
 		var bs []byte
 
-		if err := t.detectUriType(uri, &uriType); err != nil {
+		if err := t.detectUriType(file, &uriType); err != nil {
 			return err
 		}
 
-		if err := t.detectFileType(uri, &fileType); err != nil {
+		if err := t.detectFileType(file, &fileType); err != nil {
 			return err
 		}
 
-		if err := t.readContent(uri, uriType, &bs); err != nil {
+		if err := t.readContent(file, uriType, &bs); err != nil {
 			return err
 		}
 
@@ -37,16 +45,14 @@ func (t *System) LoadSchema(uris ...string) error {
 			return err
 		}
 
-		if schema.Id.IsDefined() {
-			t.i2l[schema.Id.Get()] = uri
-			t.l2i[uri] = schema.Id.Get()
-		}
-
-		if err := t.mapSchema(schema); err != nil {
+		if err := t.mapSchema(schema, file); err != nil {
 			return err
 		}
+	}
 
-		if err := t.resolveSchema(&schema); err != nil {
+	for name, schema := range t.schmeaMap {
+		fmt.Println(name)
+		if err := t.resolveSchema(schema); err != nil {
 			return err
 		}
 	}

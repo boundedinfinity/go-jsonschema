@@ -24,7 +24,8 @@ var _ = Describe("JsonSchema", func() {
 
 	Describe("Loading schemas", func() {
 		It("should load yaml", func() {
-			err := system.LoadSchema("file://test/address.schema.yaml")
+			// err := system.LoadSchema("file://test/address.schema.yaml")
+			err := system.LoadSchema("file://test")
 
 			Expect(err).To(BeNil())
 		})
