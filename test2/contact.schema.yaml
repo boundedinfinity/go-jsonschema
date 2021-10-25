@@ -17,8 +17,7 @@ properties:
                     type: string
                     maxLength: 200
                 email:
-                    description: Email
-                    $ref: https://www.boundedinfinity.com/json-schema/email
+                    $ref: https://www.boundedinfinity.com/json-schema/email-address
             required:
                 -   email
     numbers:

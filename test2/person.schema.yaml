@@ -9,11 +9,12 @@ properties:
         minItems: 1
         items:
             type: string
-            maxLength: 200
+            maxLength: 50
     image:
         description: Link to image of person
         type: string
         maxLength: 1000
+        format: uri-reference
     labels:
         type: array
         items:
