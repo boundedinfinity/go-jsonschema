@@ -11,41 +11,41 @@ import (
 //go:generate enumer -package=jsonschema -name=JsonSchemaMimeType -items=xxx
 
 type JsonSchmea struct {
-	Type                 JsonSchemaType           `json:"type" yaml:"type"`
-	Schema               optional.StringOptional  `json:"$schema" yaml:"$schema"`
-	Id                   optional.StringOptional  `json:"$id" yaml:"$id"`
-	Comment              optional.StringOptional  `json:"$comment" yaml:"$comment"`
-	Defs                 map[string]JsonSchmea    `json:"$defs" yaml:"$defs"`
-	Properties           map[string]JsonSchmea    `json:"properties" yaml:"properties"`
-	PatternProperties    map[string]JsonSchmea    `json:"patternProperties" yaml:"patternProperties"`
-	AdditionalProperties optional.BoolOptional    `json:"additionalProperties" yaml:"additionalProperties"`
-	Required             []string                 `json:"required" yaml:"required"`
-	PropertyNames        map[string]string        `json:"propertyNames" yaml:"propertyNames"`
-	MinProperties        optional.IntOptional     `json:"minProperties" yaml:"minProperties"`
-	MaxProperties        optional.IntOptional     `json:"maxProperties" yaml:"maxProperties"`
-	Title                optional.StringOptional  `json:"title" yaml:"title"`
-	Description          optional.StringOptional  `json:"description" yaml:"description"`
-	Items                *JsonSchmea              `json:"items" yaml:"items"`
-	MinContains          optional.IntOptional     `json:"minContains" yaml:"minContains"`
-	MaxContains          optional.IntOptional     `json:"maxContains" yaml:"maxContains"`
-	MinItems             optional.IntOptional     `json:"minItems" yaml:"minItems"`
-	MaxItems             optional.IntOptional     `json:"maxItems" yaml:"maxItems"`
-	UniqueItems          optional.BoolOptional    `json:"uniqueItems" yaml:"uniqueItems"`
-	Default              interface{}              `json:"default" yaml:"default"`
-	Examples             []interface{}            `json:"examples" yaml:"examples"`
-	Deprecated           optional.BoolOptional    `json:"deprecated" yaml:"deprecated"`
-	ReadOnly             optional.BoolOptional    `json:"readOnly" yaml:"readOnly"`
-	WriteOnly            optional.BoolOptional    `json:"writeOnly" yaml:"writeOnly"`
-	Enum                 []string                 `json:"enum" yaml:"enum"`
-	Const                optional.StringOptional  `json:"const" yaml:"const"`
-	Ref                  optional.StringOptional  `json:"$ref" yaml:"$ref"`
 	Anchor               optional.StringOptional  `json:"$anchor" yaml:"$anchor"`
-	MinLength            optional.IntOptional     `json:"minLength" yaml:"minLength"`
-	MaxLength            optional.IntOptional     `json:"maxLength" yaml:"maxLength"`
-	Pattern              optional.StringOptional  `json:"pattern" yaml:"pattern"`
-	MultipleOf           optional.Float64Optional `json:"multipleOf" yaml:"multipleOf"`
-	Minimum              optional.Float64Optional `json:"minimum" yaml:"minimum"`
-	ExclusiveMinimum     optional.Float64Optional `json:"exclusiveMinimum" yaml:"exclusiveMinimum"`
-	Maximum              optional.Float64Optional `json:"maximum" yaml:"maximum"`
+	AdditionalProperties optional.BoolOptional    `json:"additionalProperties" yaml:"additionalProperties"`
+	Comment              optional.StringOptional  `json:"$comment" yaml:"$comment"`
+	Const                optional.StringOptional  `json:"const" yaml:"const"`
+	Default              interface{}              `json:"default" yaml:"default"`
+	Defs                 map[string]*JsonSchmea   `json:"$defs" yaml:"$defs"`
+	Deprecated           optional.BoolOptional    `json:"deprecated" yaml:"deprecated"`
+	Description          optional.StringOptional  `json:"description" yaml:"description"`
+	Enum                 []string                 `json:"enum" yaml:"enum"`
+	Examples             []interface{}            `json:"examples" yaml:"examples"`
 	ExclusiveMaximum     optional.Float64Optional `json:"exclusiveMaximum" yaml:"exclusiveMaximum"`
+	ExclusiveMinimum     optional.Float64Optional `json:"exclusiveMinimum" yaml:"exclusiveMinimum"`
+	Id                   optional.StringOptional  `json:"$id" yaml:"$id"`
+	Items                *JsonSchmea              `json:"items" yaml:"items"`
+	MaxContains          optional.IntOptional     `json:"maxContains" yaml:"maxContains"`
+	MaxItems             optional.IntOptional     `json:"maxItems" yaml:"maxItems"`
+	Maximum              optional.Float64Optional `json:"maximum" yaml:"maximum"`
+	MaxLength            optional.IntOptional     `json:"maxLength" yaml:"maxLength"`
+	MaxProperties        optional.IntOptional     `json:"maxProperties" yaml:"maxProperties"`
+	MinContains          optional.IntOptional     `json:"minContains" yaml:"minContains"`
+	MinItems             optional.IntOptional     `json:"minItems" yaml:"minItems"`
+	Minimum              optional.Float64Optional `json:"minimum" yaml:"minimum"`
+	MinLength            optional.IntOptional     `json:"minLength" yaml:"minLength"`
+	MinProperties        optional.IntOptional     `json:"minProperties" yaml:"minProperties"`
+	MultipleOf           optional.Float64Optional `json:"multipleOf" yaml:"multipleOf"`
+	Pattern              optional.StringOptional  `json:"pattern" yaml:"pattern"`
+	Properties           map[string]*JsonSchmea   `json:"properties" yaml:"properties"`
+	PropertyNames        map[string]string        `json:"propertyNames" yaml:"pr  opertyNames"`
+	PatternProperties    map[string]*JsonSchmea   `json:"patternProperties" yaml:"patternProperties"`
+	ReadOnly             optional.BoolOptional    `json:"readOnly" yaml:"readOnly"`
+	Ref                  optional.StringOptional  `json:"$ref" yaml:"$ref"`
+	Required             []string                 `json:"required" yaml:"required"`
+	Schema               optional.StringOptional  `json:"$schema" yaml:"$schema"`
+	Title                optional.StringOptional  `json:"title" yaml:"title"`
+	Type                 JsonSchemaType           `json:"type" yaml:"type"`
+	UniqueItems          optional.BoolOptional    `json:"uniqueItems" yaml:"uniqueItems"`
+	WriteOnly            optional.BoolOptional    `json:"writeOnly" yaml:"writeOnly"`
 }

@@ -45,7 +45,7 @@ func (t *System) LoadSchema(uris ...string) error {
 			return err
 		}
 
-		if err := t.mapSchema(schema, file); err != nil {
+		if err := t.mapSchema(&schema, file); err != nil {
 			return err
 		}
 	}
