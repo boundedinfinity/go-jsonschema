@@ -24,7 +24,7 @@ func (t *System) LoadSchema(uris ...string) error {
 	}
 
 	for _, file := range files {
-		var schema JsonSchmea
+		var schemas []JsonSchmea
 		var uriType JsonSchemaUriType
 		var fileType JsonSchemaFileType
 		var bs []byte
@@ -41,13 +41,16 @@ func (t *System) LoadSchema(uris ...string) error {
 			return err
 		}
 
-		if err := t.unmarshal(&schema, fileType, bs); err != nil {
+		if err := t.unmarshal(&schemas, fileType, bs); err != nil {
 			return err
 		}
 
-		if err := t.mapSchema(&schema, file); err != nil {
-			return err
+		for _, schema := range schemas {
+			if err := t.mapSchema(&schema, file); err != nil {
+				return err
+			}
 		}
+
 	}
 
 	for name, schema := range t.schmeaMap {

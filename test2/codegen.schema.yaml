@@ -3,6 +3,13 @@ $schema: https://json-schema.org/draft/2020-12/schema
 description: A company record
 type: object
 properties:
+    info:
+        type: object
+        properties:
+            name: 
+                type: string
+            version: 
+                type: string
     type-map:
         type: object
         description: Maps Schema types to language types
@@ -19,7 +26,7 @@ properties:
             type: string
             description: Title should be model name
             # Don't know how to represent a reference to a schema in a schema
-            format: json-schema
+            format: uri-reference
     operations:
         type: array
         items:

@@ -7,9 +7,21 @@ import (
 func (t *System) mapSchema(schema *JsonSchmea, file string) error {
 	id := schema.Id.Get()
 
-	if schema.Id.IsDefined() {
+	if _, ok := t.i2l[id]; ok {
+		return ErrDuplicateDefV(id)
+	} else {
 		t.i2l[id] = file
+	}
+
+	if _, ok := t.l2i[id]; ok {
+		return ErrDuplicateDefV(id)
+	} else {
 		t.l2i[file] = id
+	}
+
+	if _, ok := t.schmeaMap[id]; ok {
+		return ErrDuplicateDefV(id)
+	} else {
 		t.schmeaMap[id] = schema
 	}
 
@@ -28,7 +40,7 @@ func (t *System) mapSchema(schema *JsonSchmea, file string) error {
 	}
 
 	switch schema.Type {
-	case JsonSchemaType_String, JsonSchemaType_Number, JsonSchemaType_Integer, JsonSchemaType_Boolean, JsonSchemaType_Null:
+	case JsonSchemaType_String, JsonSchemaType_Number, JsonSchemaType_Integer, JsonSchemaType_Boolean, JsonSchemaType_Null, JsonSchemaType_Array:
 		t.schmeaMap[id] = schema
 	case JsonSchemaType_Object:
 		for name, obj := range schema.Properties {
@@ -44,7 +56,6 @@ func (t *System) mapSchema(schema *JsonSchmea, file string) error {
 
 			t.schmeaMap[qname] = obj
 		}
-	case JsonSchemaType_Array:
 	}
 
 	return nil
@@ -66,20 +77,6 @@ func (t *System) resolveSchema(schema *JsonSchmea) error {
 			}
 		}
 	}
-
-	return nil
-}
-
-func (t *System) resolveObject(schema JsonSchmea, obj JsonSchmea) error {
-	// for pname, pobj := range obj.Properties {
-	// 	if pobj.Ref.IsDefined() {
-	// 		if robj, err := t.getRef(schema.Id, obj.Ref); err != nil {
-	// 			return err
-	// 		} else {
-	// 			pobj.Properties[pname] = *robj
-	// 		}
-	// 	}
-	// }
 
 	return nil
 }
