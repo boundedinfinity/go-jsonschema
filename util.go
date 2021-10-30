@@ -7,6 +7,8 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+
+	"github.com/boundedinfinity/jsonschema/uritype"
 )
 
 func urlJoin(root string, paths ...string) (string, error) {
@@ -28,14 +30,14 @@ func (t *System) uris2files(uris ...string) ([]string, error) {
 	var files []string
 
 	for _, uri := range uris {
-		var uriType JsonSchemaUriType
+		var uriType uritype.UriType
 
 		if err := t.detectUriType(uri, &uriType); err != nil {
 			return files, err
 		}
 
 		switch uriType {
-		case JsonSchemaUriType_File:
+		case uritype.File:
 			p := strings.TrimPrefix(uri, "file://")
 			stat, err := os.Stat(p)
 
@@ -58,7 +60,7 @@ func (t *System) uris2files(uris ...string) ([]string, error) {
 			} else {
 				files = append(files, uri)
 			}
-		case JsonSchemaUriType_Http:
+		case uritype.Http:
 			files = append(files, uri)
 		}
 

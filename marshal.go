@@ -7,18 +7,19 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/boundedinfinity/jsonschema/filetype"
 	"gopkg.in/yaml.v2"
 )
 
-func (t *System) unmarshal(ss *[]JsonSchmea, ft JsonSchemaFileType, bs []byte) error {
+func (t *System) unmarshal(ss *[]JsonSchmea, ft filetype.FileType, bs []byte) error {
 	switch ft {
-	case JsonSchemaFileType_Json:
+	case filetype.Json:
 		var s JsonSchmea
 		if err := json.Unmarshal(bs, &s); err != nil {
 			return err
 		}
 		*ss = append(*ss, s)
-	case JsonSchemaFileType_Yaml:
+	case filetype.Yaml:
 		d := yaml.NewDecoder(bytes.NewReader(bs))
 
 		for {

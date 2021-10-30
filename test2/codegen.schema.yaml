@@ -39,11 +39,19 @@ properties:
                     type: string
                     description: Description of the operation
                 input:
-                    type: string
-                    description: Reference to input model
+                    type: object
+                    properties:
+                        name: 
+                            type: string
+                        $ref:
+                            type: string
                 output:
-                    type: string
-                    description: Reference to output model
+                    type: object
+                    properties:
+                        name: 
+                            type: string
+                        $ref:
+                            type: string
     templates:
         type: array
         items:

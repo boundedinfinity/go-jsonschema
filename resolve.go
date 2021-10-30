@@ -1,6 +1,7 @@
 package jsonschema
 
 import (
+	"github.com/boundedinfinity/jsonschema/objecttype"
 	"github.com/boundedinfinity/optional"
 )
 
@@ -40,9 +41,9 @@ func (t *System) mapSchema(schema *JsonSchmea, file string) error {
 	}
 
 	switch schema.Type {
-	case JsonSchemaType_String, JsonSchemaType_Number, JsonSchemaType_Integer, JsonSchemaType_Boolean, JsonSchemaType_Null, JsonSchemaType_Array:
+	case objecttype.String, objecttype.Number, objecttype.Integer, objecttype.Boolean, objecttype.Null, objecttype.Array:
 		t.schmeaMap[id] = schema
-	case JsonSchemaType_Object:
+	case objecttype.Object:
 		for name, obj := range schema.Properties {
 			qname, err := urlJoin(id, name)
 
@@ -71,7 +72,7 @@ func (t *System) resolveSchema(schema *JsonSchmea) error {
 		}
 	} else {
 		switch schema.Type {
-		case JsonSchemaType_Array:
+		case objecttype.Array:
 			if err := t.resolveSchema(schema.Items); err != nil {
 				return err
 			}

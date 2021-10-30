@@ -1,6 +1,9 @@
 package jsonschema
 
-import "github.com/boundedinfinity/optional"
+import (
+	"github.com/boundedinfinity/jsonschema/objecttype"
+	"github.com/boundedinfinity/optional"
+)
 
 func validateInteger(v optional.Float64Optional) error {
 	if v.IsEmpty() {
@@ -30,7 +33,7 @@ func validateNonNegative(v optional.IntOptional) error {
 
 func (t JsonSchmea) Validate() error {
 	switch t.Type {
-	case JsonSchemaType_Array:
+	case objecttype.Array:
 		if t.Items == nil {
 			return ErrInvalidArrayMissingItems
 		}
@@ -50,7 +53,7 @@ func (t JsonSchmea) Validate() error {
 		if err := t.Items.Validate(); err != nil {
 			return err
 		}
-	case JsonSchemaType_Integer:
+	case objecttype.Integer:
 		if t.MultipleOf.IsDefined() {
 			if t.MultipleOf.Get() <= 0 {
 				return ErrInvalidMultipleOf
@@ -84,11 +87,11 @@ func (t JsonSchmea) Validate() error {
 				return err
 			}
 		}
-	case JsonSchemaType_Number:
+	case objecttype.Number:
 		if t.MultipleOf.IsDefined() && t.MultipleOf.Get() <= 0 {
 			return ErrInvalidMultipleOf
 		}
-	case JsonSchemaType_String:
+	case objecttype.String:
 		if err := validateNonNegative(t.MaxLength); err != nil {
 			return err
 		}
@@ -96,7 +99,7 @@ func (t JsonSchmea) Validate() error {
 		if err := validateNonNegative(t.MinLength); err != nil {
 			return err
 		}
-	case JsonSchemaType_Object:
+	case objecttype.Object:
 		for _, property := range t.Properties {
 			if err := property.Validate(); err != nil {
 				return err

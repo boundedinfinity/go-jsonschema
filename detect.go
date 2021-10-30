@@ -6,20 +6,23 @@ import (
 	"net/url"
 	"path"
 	"strings"
+
+	"github.com/boundedinfinity/jsonschema/filetype"
+	"github.com/boundedinfinity/jsonschema/uritype"
 )
 
-func (t *System) readContent(uri string, ut JsonSchemaUriType, bs *[]byte) error {
+func (t *System) readContent(uri string, ut uritype.UriType, bs *[]byte) error {
 	switch ut {
-	case JsonSchemaUriType_File:
+	case uritype.File:
 		if err := t.readFile(uri, bs); err != nil {
 			return err
 		}
-	case JsonSchemaUriType_Http:
+	case uritype.Http:
 		if err := t.readHttp(uri, bs); err != nil {
 			return err
 		}
 	default:
-		return ErrUnknownUriTypeV(uri)
+		return ErrUriTypeUnsupportedV(uri)
 	}
 
 	return nil
@@ -44,28 +47,24 @@ func (t *System) readHttp(uri string, bs *[]byte) error {
 	return fmt.Errorf("TODO")
 }
 
-func (t *System) detectFileType(uri string, ft *JsonSchemaFileType) error {
-	*ft = JsonSchemaFileType_Unknown
-
+func (t *System) detectFileType(uri string, ft *filetype.FileType) error {
 	ext := path.Ext(uri)
 
 	switch ext {
 	case ".yaml":
-		*ft = JsonSchemaFileType_Yaml
+		*ft = filetype.Yaml
 	case ".yml":
-		*ft = JsonSchemaFileType_Yaml
+		*ft = filetype.Yaml
 	case ".json":
-		*ft = JsonSchemaFileType_Json
+		*ft = filetype.Json
 	default:
-		return ErrUnknownFileTypeV(uri)
+		return ErrFileTypeUnsupportedV(uri)
 	}
 
 	return nil
 }
 
-func (t *System) detectUriType(uri string, ut *JsonSchemaUriType) error {
-	*ut = JsonSchemaUriType_Unknown
-
+func (t *System) detectUriType(uri string, ut *uritype.UriType) error {
 	parsed, err := url.Parse(uri)
 
 	if err != nil {
@@ -73,15 +72,11 @@ func (t *System) detectUriType(uri string, ut *JsonSchemaUriType) error {
 	}
 
 	if parsed.Scheme == "http" || parsed.Scheme == "https" {
-		*ut = JsonSchemaUriType_Http
+		*ut = uritype.Http
 	}
 
 	if parsed.Scheme == "file" {
-		*ut = JsonSchemaUriType_File
-	}
-
-	if *ut == JsonSchemaUriType_Unknown {
-		return ErrUnknownUriTypeV(uri)
+		*ut = uritype.File
 	}
 
 	return nil

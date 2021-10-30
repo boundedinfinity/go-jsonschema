@@ -1,6 +1,11 @@
 package jsonschema
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/boundedinfinity/jsonschema/filetype"
+	"github.com/boundedinfinity/jsonschema/uritype"
+)
 
 func New() *System {
 	return &System{
@@ -25,8 +30,8 @@ func (t *System) LoadSchema(uris ...string) error {
 
 	for _, file := range files {
 		var schemas []JsonSchmea
-		var uriType JsonSchemaUriType
-		var fileType JsonSchemaFileType
+		var uriType uritype.UriType
+		var fileType filetype.FileType
 		var bs []byte
 
 		if err := t.detectUriType(file, &uriType); err != nil {
