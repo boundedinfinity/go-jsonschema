@@ -2,7 +2,7 @@
 
 $id: https://www.boundedinfinity.com/json-schema/label
 $schema: https://json-schema.org/draft/2020-12/schema
-description: A simple label (or tag)
+description: A simple label
 type: string
 maxLength: 200
 
@@ -10,7 +10,7 @@ maxLength: 200
 
 $id: https://www.boundedinfinity.com/json-schema/label-add-request
 $schema: https://json-schema.org/draft/2020-12/schema
-description: A simple label (or tag) request
+description: A simple label request
 type: object
 properties:
     trackingId:
@@ -22,7 +22,7 @@ properties:
 
 $id: https://www.boundedinfinity.com/json-schema/label-add-response
 $schema: https://json-schema.org/draft/2020-12/schema
-description: A simple label (or tag) response
+description: A simple label response
 type: object
 properties:
     trackingId:

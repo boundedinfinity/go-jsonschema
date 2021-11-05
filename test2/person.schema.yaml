@@ -15,6 +15,14 @@ properties:
         type: string
         maxLength: 1000
         format: uri-reference
+    birth-date:
+        description: The birth date
+        type: string
+        format: date
+    death-date:
+        description: The death date
+        type: string
+        format: date
     labels:
         type: array
         items:
