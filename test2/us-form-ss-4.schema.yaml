@@ -1,6 +1,8 @@
 $id: https://www.boundedinfinity.com/json-schema/us-form-ss-4
 $schema: https://json-schema.org/draft/2020-12/schema
-description: US Form SS-4
+description: |
+  US Form SS-4
+  Reference: https://www.irs.gov/pub/irs-pdf/fss4.pdf
 type: object
 properties:
     legal-name:
