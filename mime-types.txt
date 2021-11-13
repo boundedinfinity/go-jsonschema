@@ -29,3 +29,11 @@ video/ogg
 application/ogg
 multipart/form-data
 multipart/byteranges
+text/x-yaml
+application/x-yaml
+text/yaml
+application/yaml
+application/json
+text/json
+application/x-json
+text/x-json

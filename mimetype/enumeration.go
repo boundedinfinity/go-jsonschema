@@ -6,10 +6,11 @@
 //*                                                                                  *
 //************************************************************************************
 
-package mimetypes
+package mimetype
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 )
@@ -17,12 +18,26 @@ import (
 type MimeType string
 type MimeTypes []MimeType
 
+func Slice(es ...MimeType) MimeTypes {
+	var s MimeTypes
+
+	for _, e := range es {
+		s = append(s, e)
+	}
+
+	return s
+}
+
 const (
 	ApplicationEcmascript  MimeType = "application/ecmascript"
 	ApplicationJavascript  MimeType = "application/javascript"
+	ApplicationJson        MimeType = "application/json"
 	ApplicationOgg         MimeType = "application/ogg"
 	ApplicationXEcmascript MimeType = "application/x-ecmascript"
 	ApplicationXJavascript MimeType = "application/x-javascript"
+	ApplicationXJson       MimeType = "application/x-json"
+	ApplicationXYaml       MimeType = "application/x-yaml"
+	ApplicationYaml        MimeType = "application/yaml"
 	AudioOgg               MimeType = "audio/ogg"
 	AudioWav               MimeType = "audio/wav"
 	AudioWave              MimeType = "audio/wave"
@@ -42,10 +57,14 @@ const (
 	TextJavascript14       MimeType = "text/javascript1.4"
 	TextJavascript15       MimeType = "text/javascript1.5"
 	TextJscript            MimeType = "text/jscript"
+	TextJson               MimeType = "text/json"
 	TextLivescript         MimeType = "text/livescript"
 	TextPlain              MimeType = "text/plain"
 	TextXEcmascript        MimeType = "text/x-ecmascript"
 	TextXJavascript        MimeType = "text/x-javascript"
+	TextXJson              MimeType = "text/x-json"
+	TextXYaml              MimeType = "text/x-yaml"
+	TextYaml               MimeType = "text/yaml"
 	VideoOgg               MimeType = "video/ogg"
 	VideoWebm              MimeType = "video/webm"
 )
@@ -54,9 +73,13 @@ var (
 	All = MimeTypes{
 		ApplicationEcmascript,
 		ApplicationJavascript,
+		ApplicationJson,
 		ApplicationOgg,
 		ApplicationXEcmascript,
 		ApplicationXJavascript,
+		ApplicationXJson,
+		ApplicationXYaml,
+		ApplicationYaml,
 		AudioOgg,
 		AudioWav,
 		AudioWave,
@@ -76,10 +99,14 @@ var (
 		TextJavascript14,
 		TextJavascript15,
 		TextJscript,
+		TextJson,
 		TextLivescript,
 		TextPlain,
 		TextXEcmascript,
 		TextXJavascript,
+		TextXJson,
+		TextXYaml,
+		TextYaml,
 		VideoOgg,
 		VideoWebm,
 	}
@@ -101,10 +128,12 @@ func (t MimeType) String() string {
 	return string(t)
 }
 
-func errMimeTypeInvalid(vs MimeTypes, v string) error {
+var ErrMimeTypeInvalid = errors.New("invalid enumeration type")
+
+func Error(vs MimeTypes, v string) error {
 	return fmt.Errorf(
-		"invalid enumeration type '%v', must be one of %v",
-		v, strings.Join(vs.Strings(), ","),
+		"%w '%v', must be one of %v",
+		ErrMimeTypeInvalid, v, strings.Join(vs.Strings(), ","),
 	)
 }
 
@@ -132,7 +161,7 @@ func (t MimeTypes) Parse(v string) (MimeType, error) {
 	}
 
 	if !f {
-		return o, errMimeTypeInvalid(t, v)
+		return o, Error(t, v)
 	}
 
 	return o, nil

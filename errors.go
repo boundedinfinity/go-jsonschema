@@ -3,12 +3,14 @@ package jsonschema
 import (
 	"fmt"
 
+	"github.com/boundedinfinity/jsonschema/mimetype"
 	"github.com/boundedinfinity/jsonschema/objecttype"
 )
 
 var (
 	ErrUriTypeUnsupported       = fmt.Errorf("unknown uri type")
-	ErrFileTypeUnsupported      = fmt.Errorf("unknown file type")
+	ErrMimeTypeUnsupported      = fmt.Errorf("unknown MEME type")
+	ErrMimeTypeUndetected       = fmt.Errorf("undeteched MIME type")
 	ErrDuplicateDef             = fmt.Errorf("duplicate $def")
 	ErrUnsupportedSchemaType    = fmt.Errorf("unsupported schema type")
 	ErrRefNotFound              = fmt.Errorf("reference not found")
@@ -23,10 +25,14 @@ var (
 	ErrNotInteger               = fmt.Errorf("must be integer")
 )
 
-func ErrUriTypeUnsupportedV(v string) error  { return errV(v, ErrUriTypeUnsupported) }
-func ErrFileTypeUnsupportedV(v string) error { return errV(v, ErrFileTypeUnsupported) }
-func ErrDuplicateDefV(v string) error        { return errV(v, ErrDuplicateDef) }
-func ErrRefNotFoundV(v string) error         { return errV(v, ErrRefNotFound) }
+func ErrUriTypeUnsupportedV(v string) error { return errV(v, ErrUriTypeUnsupported) }
+
+func ErrMimeTypeUnsupportedV(v mimetype.MimeType) error {
+	return errV(v.String(), ErrMimeTypeUnsupported)
+}
+
+func ErrDuplicateDefV(v string) error { return errV(v, ErrDuplicateDef) }
+func ErrRefNotFoundV(v string) error  { return errV(v, ErrRefNotFound) }
 
 func ErrUnsupportedSchemaTypeV(v objecttype.ObjectType) error {
 	return errV(v.String(), ErrUnsupportedSchemaType)

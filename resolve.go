@@ -5,20 +5,8 @@ import (
 	"github.com/boundedinfinity/optional"
 )
 
-func (t *System) mapSchema(schema *JsonSchmea, file string) error {
+func (t *System) AddtoMap(schema *JsonSchmea) error {
 	id := schema.Id.Get()
-
-	if _, ok := t.i2l[id]; ok {
-		return ErrDuplicateDefV(id)
-	} else {
-		t.i2l[id] = file
-	}
-
-	if _, ok := t.l2i[id]; ok {
-		return ErrDuplicateDefV(id)
-	} else {
-		t.l2i[file] = id
-	}
 
 	if _, ok := t.schmeaMap[id]; ok {
 		return ErrDuplicateDefV(id)

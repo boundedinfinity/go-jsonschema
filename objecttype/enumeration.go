@@ -10,12 +10,23 @@ package objecttype
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 )
 
 type ObjectType string
 type ObjectTypes []ObjectType
+
+func Slice(es ...ObjectType) ObjectTypes {
+	var s ObjectTypes
+
+	for _, e := range es {
+		s = append(s, e)
+	}
+
+	return s
+}
 
 const (
 	Array   ObjectType = "array"
@@ -55,10 +66,12 @@ func (t ObjectType) String() string {
 	return string(t)
 }
 
-func errObjectTypeInvalid(vs ObjectTypes, v string) error {
+var ErrObjectTypeInvalid = errors.New("invalid enumeration type")
+
+func Error(vs ObjectTypes, v string) error {
 	return fmt.Errorf(
-		"invalid enumeration type '%v', must be one of %v",
-		v, strings.Join(vs.Strings(), ","),
+		"%w '%v', must be one of %v",
+		ErrObjectTypeInvalid, v, strings.Join(vs.Strings(), ","),
 	)
 }
 
@@ -86,7 +99,7 @@ func (t ObjectTypes) Parse(v string) (ObjectType, error) {
 	}
 
 	if !f {
-		return o, errObjectTypeInvalid(t, v)
+		return o, Error(t, v)
 	}
 
 	return o, nil

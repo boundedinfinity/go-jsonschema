@@ -10,12 +10,23 @@ package stringformat
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 )
 
 type StringFormat string
 type StringFormats []StringFormat
+
+func Slice(es ...StringFormat) StringFormats {
+	var s StringFormats
+
+	for _, e := range es {
+		s = append(s, e)
+	}
+
+	return s
+}
 
 const (
 	Date         StringFormat = "date"
@@ -77,10 +88,12 @@ func (t StringFormat) String() string {
 	return string(t)
 }
 
-func errStringFormatInvalid(vs StringFormats, v string) error {
+var ErrStringFormatInvalid = errors.New("invalid enumeration type")
+
+func Error(vs StringFormats, v string) error {
 	return fmt.Errorf(
-		"invalid enumeration type '%v', must be one of %v",
-		v, strings.Join(vs.Strings(), ","),
+		"%w '%v', must be one of %v",
+		ErrStringFormatInvalid, v, strings.Join(vs.Strings(), ","),
 	)
 }
 
@@ -108,7 +121,7 @@ func (t StringFormats) Parse(v string) (StringFormat, error) {
 	}
 
 	if !f {
-		return o, errStringFormatInvalid(t, v)
+		return o, Error(t, v)
 	}
 
 	return o, nil

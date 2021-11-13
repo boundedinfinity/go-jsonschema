@@ -5,11 +5,9 @@ import (
 	"github.com/boundedinfinity/optional"
 )
 
-//go:generate enumer -standalone=true -package=filetype -name=FileType -items=json,yaml
-//go:generate enumer -standalone=true -package=uritype -name=UriType -items=file,http
 //go:generate enumer -standalone=true -package=objecttype -name=ObjectType -items=string,number,integer,object,array,boolean,null
 //go:generate enumer -standalone=true -package=stringformat -name=StringFormat -items=date-time,time,date,duration,email,idn-email,hostname,idn-hostname,ipv4,ipv6,uuid,uri,uri-reference,iri,iri-reference,uri-template,json-pointer,regex
-//go:generate enumer -standalone=true -package=mimetypes -name=MimeType -items-from=mime-types.txt
+//go:generate enumer -standalone=true -package=mimetype -name=MimeType -items-from=mime-types.txt
 
 type JsonSchmea struct {
 	Anchor               optional.StringOptional  `json:"$anchor" yaml:"$anchor"`
