@@ -14,9 +14,9 @@ import (
 
 func (t *System) Unmarshal(ss *[]JsonSchmea, ft mimetype.MimeType, bs []byte) error {
 	switch ft {
-	case mimetype.ApplicationJson:
+	case mimetype.ApplicationJson, mimetype.ApplicationXJson:
 		return t.unmarshalJson(ss, bs)
-	case mimetype.ApplicationYaml:
+	case mimetype.ApplicationYaml, mimetype.ApplicationXYaml:
 		return t.unmarshalYaml(ss, bs)
 	default:
 		return ErrMimeTypeUnsupportedV(ft)

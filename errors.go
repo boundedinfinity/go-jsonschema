@@ -8,6 +8,7 @@ import (
 )
 
 var (
+	ErrIdEmpty                  = fmt.Errorf("json schema ID empty")
 	ErrUriTypeUnsupported       = fmt.Errorf("unknown uri type")
 	ErrMimeTypeUnsupported      = fmt.Errorf("unknown MEME type")
 	ErrMimeTypeUndetected       = fmt.Errorf("undeteched MIME type")

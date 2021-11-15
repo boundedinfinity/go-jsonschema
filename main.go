@@ -8,12 +8,12 @@ import (
 
 func New() *System {
 	return &System{
-		schmeaMap: make(map[string]*JsonSchmea),
+		Map: make(map[string]*JsonSchmea),
 	}
 }
 
 type System struct {
-	schmeaMap map[string]*JsonSchmea
+	Map map[string]*JsonSchmea
 }
 
 func (t *System) LoadSchema(bss ...[]byte) error {
@@ -33,7 +33,7 @@ func (t *System) LoadSchema(bss ...[]byte) error {
 		}
 	}
 
-	for name, schema := range t.schmeaMap {
+	for name, schema := range t.Map {
 		fmt.Println(name)
 		if err := t.resolveSchema(schema); err != nil {
 			return err

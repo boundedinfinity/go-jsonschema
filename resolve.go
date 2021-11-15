@@ -6,12 +6,16 @@ import (
 )
 
 func (t *System) AddtoMap(schema *JsonSchmea) error {
+	if schema.Id.IsEmpty() {
+		return ErrIdEmpty
+	}
+
 	id := schema.Id.Get()
 
-	if _, ok := t.schmeaMap[id]; ok {
+	if _, ok := t.Map[id]; ok {
 		return ErrDuplicateDefV(id)
 	} else {
-		t.schmeaMap[id] = schema
+		t.Map[id] = schema
 	}
 
 	for name, obj := range schema.Defs {
@@ -21,16 +25,16 @@ func (t *System) AddtoMap(schema *JsonSchmea) error {
 			return err
 		}
 
-		if _, ok := t.schmeaMap[qname]; ok {
+		if _, ok := t.Map[qname]; ok {
 			return ErrDuplicateDefV(qname)
 		}
 
-		t.schmeaMap[qname] = obj
+		t.Map[qname] = obj
 	}
 
 	switch schema.Type {
 	case objecttype.String, objecttype.Number, objecttype.Integer, objecttype.Boolean, objecttype.Null, objecttype.Array:
-		t.schmeaMap[id] = schema
+		t.Map[id] = schema
 	case objecttype.Object:
 		for name, obj := range schema.Properties {
 			qname, err := urlJoin(id, name)
@@ -39,11 +43,11 @@ func (t *System) AddtoMap(schema *JsonSchmea) error {
 				return err
 			}
 
-			if _, ok := t.schmeaMap[qname]; ok {
+			if _, ok := t.Map[qname]; ok {
 				return ErrDuplicateDefV(qname)
 			}
 
-			t.schmeaMap[qname] = obj
+			t.Map[qname] = obj
 		}
 	}
 
@@ -53,7 +57,7 @@ func (t *System) AddtoMap(schema *JsonSchmea) error {
 func (t *System) resolveSchema(schema *JsonSchmea) error {
 	if schema.Ref.IsDefined() {
 		id := schema.Ref.Get()
-		if ref, ok := t.schmeaMap[id]; ok {
+		if ref, ok := t.Map[id]; ok {
 			*schema = *ref
 		} else {
 			return ErrRefNotFoundV(schema.Ref.Get())
