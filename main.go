@@ -17,7 +17,6 @@ type System struct {
 }
 
 func (t *System) LoadSchema(bss ...[]byte) error {
-
 	for _, bs := range bss {
 		var schemas []JsonSchmea
 		var mimeType mimetype.MimeType
@@ -27,7 +26,7 @@ func (t *System) LoadSchema(bss ...[]byte) error {
 		}
 
 		for _, schema := range schemas {
-			if err := t.AddtoMap(&schema); err != nil {
+			if err := t.Add(&schema); err != nil {
 				return err
 			}
 		}
@@ -35,7 +34,7 @@ func (t *System) LoadSchema(bss ...[]byte) error {
 
 	for name, schema := range t.Map {
 		fmt.Println(name)
-		if err := t.resolveSchema(schema); err != nil {
+		if err := t.Resolve(schema); err != nil {
 			return err
 		}
 	}

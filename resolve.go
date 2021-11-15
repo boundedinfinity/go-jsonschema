@@ -1,11 +1,13 @@
 package jsonschema
 
 import (
+	"fmt"
+
 	"github.com/boundedinfinity/jsonschema/objecttype"
 	"github.com/boundedinfinity/optional"
 )
 
-func (t *System) AddtoMap(schema *JsonSchmea) error {
+func (t *System) Add(schema *JsonSchmea) error {
 	if schema.Id.IsEmpty() {
 		return ErrIdEmpty
 	}
@@ -54,7 +56,18 @@ func (t *System) AddtoMap(schema *JsonSchmea) error {
 	return nil
 }
 
-func (t *System) resolveSchema(schema *JsonSchmea) error {
+func (t *System) ResolveAll() error {
+	for name, schema := range t.Map {
+		fmt.Println(name)
+		if err := t.Resolve(schema); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (t *System) Resolve(schema *JsonSchmea) error {
 	if schema.Ref.IsDefined() {
 		id := schema.Ref.Get()
 		if ref, ok := t.Map[id]; ok {
@@ -65,7 +78,7 @@ func (t *System) resolveSchema(schema *JsonSchmea) error {
 	} else {
 		switch schema.Type {
 		case objecttype.Array:
-			if err := t.resolveSchema(schema.Items); err != nil {
+			if err := t.Resolve(schema.Items); err != nil {
 				return err
 			}
 		}
