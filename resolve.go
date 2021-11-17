@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/boundedinfinity/jsonschema/objecttype"
-	"github.com/boundedinfinity/optional"
 )
 
 func (t *System) Add(schema *JsonSchmea) error {
@@ -85,27 +84,4 @@ func (t *System) Resolve(schema *JsonSchmea) error {
 	}
 
 	return nil
-}
-
-func (t *System) getRef(id optional.StringOptional, ref optional.StringOptional) (*JsonSchmea, error) {
-	// var key string
-
-	// if strings.HasPrefix(ref.String(), "#") {
-	// 	idUrl, err := url.Parse(id.Get())
-
-	// 	if err != nil {
-	// 		return &JsonSchmea{}, err
-	// 	}
-
-	// 	idUrl.Path = path.Join(idUrl.Path, strings.TrimPrefix(ref.Get(), "#"))
-	// 	key = idUrl.String()
-	// } else {
-	// 	key = ref.String()
-	// }
-
-	// if obj, ok := t.typeMap[key]; ok {
-	// 	return obj, nil
-	// }
-
-	return &JsonSchmea{}, ErrRefNotFoundV(ref.Get())
 }
