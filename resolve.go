@@ -55,6 +55,27 @@ func (t *System) Add(schema *JsonSchmea) error {
 	return nil
 }
 
+func (t *System) Exist(id string) bool {
+	if id == "" {
+		return false
+	}
+
+	_, ok := t.Map[id]
+	return ok
+}
+
+func (t *System) Assert(id string) error {
+	if id == "" {
+		return ErrIdEmpty
+	}
+
+	if _, ok := t.Map[id]; !ok {
+		return ErrSchemaNotFoundV(id)
+	}
+
+	return nil
+}
+
 func (t *System) ResolveAll() error {
 	for name, schema := range t.Map {
 		fmt.Println(name)

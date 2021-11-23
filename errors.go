@@ -9,6 +9,7 @@ import (
 
 var (
 	ErrIdEmpty                  = fmt.Errorf("json schema ID empty")
+	ErrSchemaNotFound           = fmt.Errorf("json schema not found")
 	ErrUriTypeUnsupported       = fmt.Errorf("unknown uri type")
 	ErrMimeTypeUnsupported      = fmt.Errorf("unknown MEME type")
 	ErrMimeTypeUndetected       = fmt.Errorf("undeteched MIME type")
@@ -37,6 +38,10 @@ func ErrRefNotFoundV(v string) error  { return errV(v, ErrRefNotFound) }
 
 func ErrUnsupportedSchemaTypeV(v objecttype.ObjectType) error {
 	return errV(v.String(), ErrUnsupportedSchemaType)
+}
+
+func ErrSchemaNotFoundV(v string) error {
+	return errV(v, ErrSchemaNotFound)
 }
 
 func errV(v string, err error) error {
