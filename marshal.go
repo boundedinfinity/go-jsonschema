@@ -8,15 +8,15 @@ import (
 	"io"
 	"strings"
 
-	"github.com/boundedinfinity/jsonschema/mimetype"
+	"github.com/boundedinfinity/mimetyper/mime_type"
 	"gopkg.in/yaml.v2"
 )
 
-func (t *System) Unmarshal(ss *[]JsonSchmea, ft mimetype.MimeType, bs []byte) error {
+func (t *System) Unmarshal(ss *[]JsonSchmea, ft mime_type.MimeType, bs []byte) error {
 	switch ft {
-	case mimetype.ApplicationJson, mimetype.ApplicationXJson:
+	case mime_type.ApplicationJson:
 		return t.unmarshalJson(ss, bs)
-	case mimetype.ApplicationYaml, mimetype.ApplicationXYaml:
+	case mime_type.ApplicationXYaml:
 		return t.unmarshalYaml(ss, bs)
 	default:
 		return ErrMimeTypeUnsupportedV(ft)

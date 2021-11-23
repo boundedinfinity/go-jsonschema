@@ -3,8 +3,8 @@ package jsonschema
 import (
 	"fmt"
 
-	"github.com/boundedinfinity/jsonschema/mimetype"
 	"github.com/boundedinfinity/jsonschema/objecttype"
+	"github.com/boundedinfinity/mimetyper/mime_type"
 )
 
 var (
@@ -28,7 +28,7 @@ var (
 
 func ErrUriTypeUnsupportedV(v string) error { return errV(v, ErrUriTypeUnsupported) }
 
-func ErrMimeTypeUnsupportedV(v mimetype.MimeType) error {
+func ErrMimeTypeUnsupportedV(v mime_type.MimeType) error {
 	return errV(v.String(), ErrMimeTypeUnsupported)
 }
 

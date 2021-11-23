@@ -3,7 +3,7 @@ package jsonschema
 import (
 	"fmt"
 
-	"github.com/boundedinfinity/jsonschema/mimetype"
+	"github.com/boundedinfinity/mimetyper/mime_type"
 )
 
 func New() *System {
@@ -19,7 +19,7 @@ type System struct {
 func (t *System) LoadSchema(bss ...[]byte) error {
 	for _, bs := range bss {
 		var schemas []JsonSchmea
-		var mimeType mimetype.MimeType
+		var mimeType mime_type.MimeType
 
 		if err := t.Unmarshal(&schemas, mimeType, bs); err != nil {
 			return err
