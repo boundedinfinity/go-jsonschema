@@ -15,4 +15,5 @@ iri
 iri-reference
 uri-template
 json-pointer
+relative-json-pointer
 regex

@@ -8,6 +8,8 @@
 
 package objecttype
 
+//go:generate go run cmd/main.go -type=int
+
 import (
 	"encoding/json"
 	"errors"

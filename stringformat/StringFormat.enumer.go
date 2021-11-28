@@ -8,6 +8,8 @@
 
 package stringformat
 
+//go:generate go run cmd/main.go -type=int
+
 import (
 	"encoding/json"
 	"errors"
@@ -29,24 +31,25 @@ func Slice(es ...StringFormat) StringFormats {
 }
 
 const (
-	Date         StringFormat = "date"
-	DateTime     StringFormat = "date-time"
-	Duration     StringFormat = "duration"
-	Email        StringFormat = "email"
-	Hostname     StringFormat = "hostname"
-	IdnEmail     StringFormat = "idn-email"
-	IdnHostname  StringFormat = "idn-hostname"
-	Ipv4         StringFormat = "ipv4"
-	Ipv6         StringFormat = "ipv6"
-	Iri          StringFormat = "iri"
-	IriReference StringFormat = "iri-reference"
-	JsonPointer  StringFormat = "json-pointer"
-	Regex        StringFormat = "regex"
-	Time         StringFormat = "time"
-	Uri          StringFormat = "uri"
-	UriReference StringFormat = "uri-reference"
-	UriTemplate  StringFormat = "uri-template"
-	Uuid         StringFormat = "uuid"
+	Date                StringFormat = "date"
+	DateTime            StringFormat = "date-time"
+	Duration            StringFormat = "duration"
+	Email               StringFormat = "email"
+	Hostname            StringFormat = "hostname"
+	IdnEmail            StringFormat = "idn-email"
+	IdnHostname         StringFormat = "idn-hostname"
+	Ipv4                StringFormat = "ipv4"
+	Ipv6                StringFormat = "ipv6"
+	Iri                 StringFormat = "iri"
+	IriReference        StringFormat = "iri-reference"
+	JsonPointer         StringFormat = "json-pointer"
+	Regex               StringFormat = "regex"
+	RelativeJsonPointer StringFormat = "relative-json-pointer"
+	Time                StringFormat = "time"
+	Uri                 StringFormat = "uri"
+	UriReference        StringFormat = "uri-reference"
+	UriTemplate         StringFormat = "uri-template"
+	Uuid                StringFormat = "uuid"
 )
 
 var (
@@ -64,6 +67,7 @@ var (
 		IriReference,
 		JsonPointer,
 		Regex,
+		RelativeJsonPointer,
 		Time,
 		Uri,
 		UriReference,

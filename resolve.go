@@ -33,7 +33,11 @@ func (t *System) Add(schema *JsonSchmea) error {
 		t.Map[qname] = obj
 	}
 
-	switch schema.Type {
+	if schema.Type.IsEmpty() {
+		return ErrObjectTypeEmpty
+	}
+
+	switch schema.Type.Get() {
 	case objecttype.String, objecttype.Number, objecttype.Integer, objecttype.Boolean, objecttype.Null, objecttype.Array:
 		t.Map[id] = schema
 	case objecttype.Object:
@@ -96,7 +100,11 @@ func (t *System) Resolve(schema *JsonSchmea) error {
 			return ErrRefNotFoundV(schema.Ref.Get())
 		}
 	} else {
-		switch schema.Type {
+		if schema.Type.IsEmpty() {
+			return ErrObjectTypeEmpty
+		}
+
+		switch schema.Type.Get() {
 		case objecttype.Array:
 			if err := t.Resolve(schema.Items); err != nil {
 				return err

@@ -9,6 +9,7 @@ require (
 	github.com/boundedinfinity/enumer v0.0.0-20210922180824-ae76611f966f // indirect
 	github.com/boundedinfinity/mimetyper v0.0.0-20211121204855-2eb5ba3c3d07 // indirect
 	github.com/boundedinfinity/optional v0.0.0-20210407141403-b656be5ecb97 // indirect
+	github.com/boundedinfinity/optioner v0.0.0-20211128195323-aef6932f5324 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
