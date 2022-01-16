@@ -34,6 +34,25 @@ var (
 	ErrStringFormatUnsupported  = errors.New("unsupported string format")
 )
 
+// Validation Errors
+
+var (
+	ErrNotMultipleOf  = errors.New("not a multiple of")
+	ErrNotMultipleOff = func(v, x int) error { return fmt.Errorf("%v %v %v", v, ErrNotMultipleOf, x) }
+
+	ErrIsLessThan  = errors.New("is less than")
+	ErrIsLessThanf = func(v, x int) error { return fmt.Errorf("%v %v %v", v, ErrIsLessThan, x) }
+
+	ErrIsLessThanOrEqualTo  = errors.New("is less than or equal to")
+	ErrIsLessThanOrEqualTof = func(v, x int) error { return fmt.Errorf("%v %v %v", v, ErrIsLessThanOrEqualTo, x) }
+
+	ErrIsGreaterThan  = errors.New("is greater than")
+	ErrIsGreaterThanf = func(v, x int) error { return fmt.Errorf("%v %v %v", v, ErrIsGreaterThan, x) }
+
+	ErrIsGreaterThanOrEqualTo  = errors.New("is greater than or equal to")
+	ErrIsGreaterThanOrEqualTof = func(v, x int) error { return fmt.Errorf("%v %v %v", v, ErrIsGreaterThanOrEqualTo, x) }
+)
+
 func ErrUriTypeUnsupportedV(v string) error { return errV(v, ErrUriTypeUnsupported) }
 
 func ErrMimeTypeUnsupportedV(v mime_type.MimeType) error {
