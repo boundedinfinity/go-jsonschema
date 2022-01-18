@@ -51,3 +51,25 @@ type JsonSchmea struct {
 	UniqueItems          optioner.BoolOption             `json:"uniqueItems" yaml:"uniqueItems"`
 	WriteOnly            optioner.BoolOption             `json:"writeOnly" yaml:"writeOnly"`
 }
+
+func (t JsonSchmea) HasValidation() bool {
+	if t.Type.IsDefined() {
+		switch t.Type.Get() {
+		case objecttype.Integer, objecttype.Number:
+			if t.Minimum.IsDefined() || t.ExclusiveMinimum.IsDefined() ||
+				t.Maximum.IsDefined() || t.ExclusiveMaximum.IsDefined() ||
+				t.MultipleOf.IsDefined() {
+				return true
+			}
+		case objecttype.String:
+			if t.MinLength.IsDefined() || t.MaxLength.IsDefined() ||
+				t.Pattern.IsDefined() || t.Format.IsDefined() {
+				return true
+			}
+		default:
+			return false
+		}
+	}
+
+	return false
+}
