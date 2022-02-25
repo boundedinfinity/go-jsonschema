@@ -139,7 +139,7 @@ func (t JsonSchmea) validateString() error {
 	return nil
 }
 
-func validateNotGreaterThan(x, y optioner.IntOption) error {
+func validateNotGreaterThan(x, y optioner.Optioner[int]) error {
 	if x.IsEmpty() || y.IsEmpty() {
 		return nil
 	}
@@ -150,7 +150,7 @@ func validateNotGreaterThan(x, y optioner.IntOption) error {
 	return nil
 }
 
-func validateInteger(v optioner.Float64Option) error {
+func validateInteger(v optioner.Optioner[float64]) error {
 	if v.IsEmpty() {
 		return nil
 	}
@@ -164,7 +164,7 @@ func validateInteger(v optioner.Float64Option) error {
 	return nil
 }
 
-func validateNonNegative(v optioner.IntOption) error {
+func validateNonNegative(v optioner.Optioner[int]) error {
 	if v.IsEmpty() {
 		return nil
 	}

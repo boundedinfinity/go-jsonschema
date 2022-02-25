@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/boundedinfinity/jsonschema"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
@@ -20,14 +20,15 @@ var _ = Describe("JsonSchema", func() {
 
 	BeforeEach(func() {
 		system = jsonschema.New()
+		system.Exist("")
 	})
 
 	Describe("Loading schemas", func() {
 		It("should load yaml", func() {
 			// err := system.LoadSchema("file://test/address.schema.yaml")
-			err := system.LoadSchema("file://test")
+			// err := system.LoadSchema("file://test")
 
-			Expect(err).To(BeNil())
+			// Expect(err).To(BeNil())
 		})
 	})
 })

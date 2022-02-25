@@ -68,7 +68,7 @@ func ErrUnsupportedSchemaTypeV(v objecttype.ObjectType) error {
 
 func ErrSchemaNotFoundV(v string) error { return errV(v, ErrSchemaNotFound) }
 func ErrStringInvalidPatternV(v string, err error) error {
-	return fmt.Errorf("%v : %w : %w", v, ErrStringInvalidPattern, err)
+	return fmt.Errorf("%v : %v : %w", v, ErrStringInvalidPattern, err)
 }
 
 func ErrStringFormatInvalidV(v stringformat.StringFormatOption) error {
