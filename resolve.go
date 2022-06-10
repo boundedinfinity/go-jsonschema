@@ -7,7 +7,7 @@ import (
 )
 
 func (t *System) Add(schema *JsonSchmea) error {
-	if schema.Id.IsEmpty() {
+	if schema.Id.Empty() {
 		return ErrIdEmpty
 	}
 
@@ -92,7 +92,7 @@ func (t *System) ResolveAll() error {
 }
 
 func (t *System) Resolve(schema *JsonSchmea) error {
-	if schema.Ref.IsDefined() {
+	if schema.Ref.Defined() {
 		id := schema.Ref.Get()
 		if ref, ok := t.Map[id]; ok {
 			*schema = *ref

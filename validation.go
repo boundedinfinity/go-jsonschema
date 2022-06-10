@@ -40,7 +40,7 @@ func (t JsonSchmea) Validate() error {
 		}
 
 	case objecttype.Number:
-		if t.MultipleOf.IsDefined() && t.MultipleOf.Get() <= 0 {
+		if t.MultipleOf.Defined() && t.MultipleOf.Get() <= 0 {
 			return ErrInvalidMultipleOf
 		}
 	case objecttype.String:
@@ -60,7 +60,7 @@ func (t JsonSchmea) Validate() error {
 }
 
 func (t JsonSchmea) validateInteger() error {
-	if t.MultipleOf.IsDefined() {
+	if t.MultipleOf.Defined() {
 		if t.MultipleOf.Get() <= 0 {
 			return ErrInvalidMultipleOf
 		}
@@ -70,25 +70,25 @@ func (t JsonSchmea) validateInteger() error {
 		}
 	}
 
-	if t.Maximum.IsDefined() {
+	if t.Maximum.Defined() {
 		if err := validateInteger(t.Maximum); err != nil {
 			return err
 		}
 	}
 
-	if t.ExclusiveMaximum.IsDefined() {
+	if t.ExclusiveMaximum.Defined() {
 		if err := validateInteger(t.ExclusiveMaximum); err != nil {
 			return err
 		}
 	}
 
-	if t.Minimum.IsDefined() {
+	if t.Minimum.Defined() {
 		if err := validateInteger(t.Minimum); err != nil {
 			return err
 		}
 	}
 
-	if t.ExclusiveMinimum.IsDefined() {
+	if t.ExclusiveMinimum.Defined() {
 		if err := validateInteger(t.ExclusiveMinimum); err != nil {
 			return err
 		}
@@ -109,7 +109,7 @@ func (t JsonSchmea) validateString() error {
 		return err
 	}
 
-	if t.Pattern.IsDefined() {
+	if t.Pattern.Defined() {
 		_, err := regexp.Compile(t.Pattern.Get())
 
 		if err != nil {
@@ -140,7 +140,7 @@ func (t JsonSchmea) validateString() error {
 }
 
 func validateNotGreaterThan(x, y optioner.Optioner[int]) error {
-	if x.IsEmpty() || y.IsEmpty() {
+	if x.Empty() || y.Empty() {
 		return nil
 	}
 
@@ -151,7 +151,7 @@ func validateNotGreaterThan(x, y optioner.Optioner[int]) error {
 }
 
 func validateInteger(v optioner.Optioner[float64]) error {
-	if v.IsEmpty() {
+	if v.Empty() {
 		return nil
 	}
 
@@ -165,7 +165,7 @@ func validateInteger(v optioner.Optioner[float64]) error {
 }
 
 func validateNonNegative(v optioner.Optioner[int]) error {
-	if v.IsEmpty() {
+	if v.Empty() {
 		return nil
 	}
 

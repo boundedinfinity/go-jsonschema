@@ -21,7 +21,7 @@ var (
 	regex_dur_week  = `\d+[wW]`
 	regex_dur_month = `\d+[mM]`
 	regex_dur_year  = `\d+[yY]`
-	regex_dur_date  = fmt.Sprintf(`%v?%v?%v?%v?`, regex_dur_year, regex_dur_month)
+	regex_dur_date  = fmt.Sprintf(`%v?%v?`, regex_dur_year, regex_dur_month)
 
 	STRINGFORMAT_REGEX_DATE                = regex_0000_to_9999 + "-" + regex_1_to_12 + "-" + regex_1_to_31
 	STRINGFORMAT_REGEX_TIME                = regex_1_to_24 + ":" + regex_0_to_59 + ":" + regex_0_to_59
