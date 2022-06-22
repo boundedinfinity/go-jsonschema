@@ -4,13 +4,15 @@ import (
 	"testing"
 
 	"github.com/boundedinfinity/jsonschema"
-	"github.com/boundedinfinity/optioner"
 	"github.com/stretchr/testify/assert"
 )
 
-func Test(t *testing.T) {
-	schema := &jsonschema.JsonSchmea{
-		Id: optioner.Some("test-id"),
-	}
-	assert.Equal(t, schema.Id.Defined(), true)
+func Test_Load_object_1(t *testing.T) {
+	sys := jsonschema.New()
+
+	err := sys.Load(getTestDataPath("strings"), getTestDataPath("objects"))
+	assert.Nil(t, err)
+
+	err = sys.Resolve()
+	assert.Nil(t, err)
 }

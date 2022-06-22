@@ -12,22 +12,24 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func (t *System) Unmarshal(ss *[]JsonSchmea, ft mime_type.MimeType, bs []byte) error {
-	switch ft {
+func (t *System) Unmarshal(ss *[]JsonSchema, mt mime_type.MimeType, bs []byte) error {
+	realmt := mime_type.ResolveMimeType(mt)
+
+	switch realmt {
 	case mime_type.ApplicationJson:
 		return t.unmarshalJson(ss, bs)
 	case mime_type.ApplicationXYaml:
 		return t.unmarshalYaml(ss, bs)
 	default:
-		return ErrMimeTypeUnsupportedV(ft)
+		return ErrMimeTypeUnsupportedV(mt)
 	}
 }
 
-func (t *System) unmarshalYaml(ss *[]JsonSchmea, bs []byte) error {
+func (t *System) unmarshalYaml(ss *[]JsonSchema, bs []byte) error {
 	d := yaml.NewDecoder(bytes.NewReader(bs))
 
 	for {
-		s := new(JsonSchmea)
+		s := new(JsonSchema)
 
 		err := d.Decode(&s)
 
@@ -49,20 +51,20 @@ func (t *System) unmarshalYaml(ss *[]JsonSchmea, bs []byte) error {
 	return nil
 }
 
-func (t *System) unmarshalJson(ss *[]JsonSchmea, bs []byte) error {
+func (t *System) unmarshalJson(ss *[]JsonSchema, bs []byte) error {
 	s := string(bs)
 	s = strings.TrimSpace(s)
 	f := s[0:1]
 
 	switch f {
 	case "{":
-		var x JsonSchmea
+		var x JsonSchema
 		if err := json.Unmarshal(bs, &s); err != nil {
 			return err
 		}
 		*ss = append(*ss, x)
 	case "[":
-		var xs []JsonSchmea
+		var xs []JsonSchema
 
 		if err := json.Unmarshal(bs, &xs); err != nil {
 			return err

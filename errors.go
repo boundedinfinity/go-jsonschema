@@ -3,13 +3,16 @@ package jsonschema
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/boundedinfinity/jsonschema/objecttype"
 	"github.com/boundedinfinity/jsonschema/stringformat"
 	"github.com/boundedinfinity/mimetyper/mime_type"
+	"github.com/boundedinfinity/optioner"
 )
 
 var (
+	ErrUnsupportedFileType      = errors.New("unsupported file type")
 	ErrIdEmpty                  = errors.New("json schema ID empty")
 	ErrSchemaNotFound           = errors.New("json schema not found")
 	ErrUriTypeUnsupported       = errors.New("unknown uri type")
@@ -53,6 +56,14 @@ var (
 	ErrIsGreaterThanOrEqualTof = func(v, x int) error { return fmt.Errorf("%v %v %v", v, ErrIsGreaterThanOrEqualTo, x) }
 )
 
+func ErrIdEmptyf(key string) error {
+	return fmt.Errorf("%v : %w", key, ErrIdEmpty)
+}
+
+func ErrUnsupportedFileTypef(path string, extentions []string) error {
+	return fmt.Errorf("%v %w : must be one of %v", path, ErrUnsupportedFileType, strings.Join(extentions, ", "))
+}
+
 func ErrUriTypeUnsupportedV(v string) error { return errV(v, ErrUriTypeUnsupported) }
 
 func ErrMimeTypeUnsupportedV(v mime_type.MimeType) error {
@@ -71,12 +82,12 @@ func ErrStringInvalidPatternV(v string, err error) error {
 	return fmt.Errorf("%v : %v : %w", v, ErrStringInvalidPattern, err)
 }
 
-func ErrStringFormatInvalidV(v stringformat.StringFormatOption) error {
-	return errV(v.String(), ErrStringFormatInvalid)
+func ErrStringFormatInvalidV(v optioner.Option[stringformat.StringFormat]) error {
+	return errV(v.Get().String(), ErrStringFormatInvalid)
 }
 
-func ErrStringFormatUnsupportedV(v stringformat.StringFormatOption) error {
-	return errV(v.String(), ErrStringFormatUnsupported)
+func ErrStringFormatUnsupportedV(v optioner.Option[stringformat.StringFormat]) error {
+	return errV(v.Get().String(), ErrStringFormatUnsupported)
 }
 
 func ErrMinGreaterThanMaxV(min, max int) error {

@@ -6,10 +6,8 @@ list:
 	@grep '^[^#[:space:]].*:' Makefile | grep -v ':=' | grep -v '^\.' | sed 's/:.*//g' | sed 's/://g' | sort
 
 purge:
-	rm -rf objecttype/*.enumer.go
-	rm -rf objecttype/*.optioner.go
-	rm -rf stringformat/*.enumer.go
-	rm -rf stringformat/*.optioner.go
+	rm -rf objecttype/*.enum.go
+	rm -rf stringformat/*.enum.go
 
 build:
 	go build

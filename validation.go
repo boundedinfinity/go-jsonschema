@@ -8,8 +8,8 @@ import (
 	"github.com/boundedinfinity/optioner"
 )
 
-func (t JsonSchmea) Validate() error {
-	if t.Type.IsEmpty() {
+func (t JsonSchema) Validate() error {
+	if t.Type.Empty() {
 		return ErrObjectTypeEmpty
 	}
 
@@ -59,7 +59,7 @@ func (t JsonSchmea) Validate() error {
 	return nil
 }
 
-func (t JsonSchmea) validateInteger() error {
+func (t JsonSchema) validateInteger() error {
 	if t.MultipleOf.Defined() {
 		if t.MultipleOf.Get() <= 0 {
 			return ErrInvalidMultipleOf
@@ -96,7 +96,7 @@ func (t JsonSchmea) validateInteger() error {
 	return nil
 }
 
-func (t JsonSchmea) validateString() error {
+func (t JsonSchema) validateString() error {
 	if err := validateNonNegative(t.MaxLength); err != nil {
 		return err
 	}
@@ -117,7 +117,7 @@ func (t JsonSchmea) validateString() error {
 		}
 	}
 
-	if t.Format.IsDefined() {
+	if t.Format.Defined() {
 		switch t.Format.Get() {
 		case stringformat.DateTime, stringformat.Date, stringformat.Time, stringformat.Duration,
 			stringformat.Email, stringformat.IdnEmail,
@@ -139,7 +139,7 @@ func (t JsonSchmea) validateString() error {
 	return nil
 }
 
-func validateNotGreaterThan(x, y optioner.Optioner[int]) error {
+func validateNotGreaterThan(x, y optioner.Option[int]) error {
 	if x.Empty() || y.Empty() {
 		return nil
 	}
@@ -150,7 +150,7 @@ func validateNotGreaterThan(x, y optioner.Optioner[int]) error {
 	return nil
 }
 
-func validateInteger(v optioner.Optioner[float64]) error {
+func validateInteger(v optioner.Option[float64]) error {
 	if v.Empty() {
 		return nil
 	}
@@ -164,7 +164,7 @@ func validateInteger(v optioner.Optioner[float64]) error {
 	return nil
 }
 
-func validateNonNegative(v optioner.Optioner[int]) error {
+func validateNonNegative(v optioner.Option[int]) error {
 	if v.Empty() {
 		return nil
 	}
