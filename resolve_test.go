@@ -10,7 +10,7 @@ import (
 func Test_Load_object_1(t *testing.T) {
 	sys := jsonschema.New()
 
-	err := sys.Load(getTestDataPath("strings"), getTestDataPath("objects"))
+	err := sys.Load(getTestDataPath("strings"), getTestDataPath("objects/obj-1.schema.yaml"))
 	assert.Nil(t, err)
 
 	err = sys.Resolve()

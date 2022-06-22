@@ -42,7 +42,7 @@ func Test_Load_string_dir(t *testing.T) {
 }
 
 func Test_Load_string_plain(t *testing.T) {
-	path := getTestDataPath("strings/string-plain.schema.yaml")
+	path := getTestDataPath("strings/plain.schema.yaml")
 	sys := jsonschema.New()
 	err := sys.Load(path)
 
@@ -59,13 +59,13 @@ func Test_Load_string_plain(t *testing.T) {
 
 func Test_Load_string(t *testing.T) {
 	sys := jsonschema.New()
-	err := sys.Load(getTestDataPath("strings/string-single.schema.yaml"))
+	err := sys.Load(getTestDataPath("strings/single.schema.yaml"))
 
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(sys.SourceMap))
 
 	sys.Clear()
-	err = sys.Load(getTestDataPath("strings/string-multi.schema.yaml"))
+	err = sys.Load(getTestDataPath("strings/multi.schema.yaml"))
 
 	assert.Nil(t, err)
 	assert.Equal(t, 2, len(sys.SourceMap))
@@ -73,7 +73,7 @@ func Test_Load_string(t *testing.T) {
 
 func Test_Load_bad_extention(t *testing.T) {
 	sys := jsonschema.New()
-	err := sys.Load(getTestDataPath("strings/string-normal.yaml"))
+	err := sys.Load(getTestDataPath("strings/normal.yaml"))
 
 	assert.NotNil(t, err)
 	assert.True(t, errors.Is(err, jsonschema.ErrUnsupportedFileType))

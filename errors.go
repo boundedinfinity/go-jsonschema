@@ -15,6 +15,7 @@ var (
 	ErrUnsupportedFileType      = errors.New("unsupported file type")
 	ErrIdEmpty                  = errors.New("json schema ID empty")
 	ErrSchemaNotFound           = errors.New("json schema not found")
+	ErrPropertyNotFound         = errors.New("property not found")
 	ErrUriTypeUnsupported       = errors.New("unknown uri type")
 	ErrMimeTypeUnsupported      = errors.New("unknown MEME type")
 	ErrMimeTypeUndetected       = errors.New("undeteched MIME type")
@@ -55,6 +56,10 @@ var (
 	ErrIsGreaterThanOrEqualTo  = errors.New("is greater than or equal to")
 	ErrIsGreaterThanOrEqualTof = func(v, x int) error { return fmt.Errorf("%v %v %v", v, ErrIsGreaterThanOrEqualTo, x) }
 )
+
+func ErrPropertyNotFoundV(propname string) error {
+	return fmt.Errorf("%v : %w", propname, ErrPropertyNotFound)
+}
 
 func ErrIdEmptyf(key string) error {
 	return fmt.Errorf("%v : %w", key, ErrIdEmpty)

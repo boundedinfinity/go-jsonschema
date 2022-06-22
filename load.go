@@ -58,6 +58,11 @@ func (t *System) walkProcess(path string) error {
 		}
 
 		t.SourceMap[key] = s.Id.Get()
+
+		if s.system == nil {
+			s.system = t
+		}
+
 		t.IdMap[s.Id.Get()] = s
 	}
 

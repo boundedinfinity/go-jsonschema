@@ -10,6 +10,8 @@ import (
 //go:generate enumer -path=./stringformat/main.go
 
 type JsonSchema struct {
+	system               *System
+	parent               optioner.Option[JsonSchema]
 	Anchor               optioner.Option[string]                    `json:"$anchor" yaml:"$anchor"`
 	AdditionalProperties optioner.Option[bool]                      `json:"additionalProperties" yaml:"additionalProperties"`
 	Comment              optioner.Option[string]                    `json:"$comment" yaml:"$comment"`
