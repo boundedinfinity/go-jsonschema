@@ -3,7 +3,26 @@ package jsonschema
 import (
 	"github.com/boundedinfinity/commons/slices"
 	"github.com/boundedinfinity/go-trier"
+	"github.com/boundedinfinity/optioner"
 )
+
+func (js JsonSchema) Copy(name string) JsonSchema {
+	copy := JsonSchema{
+		system: js.system,
+		parent: js.parent,
+		Anchor: js.Anchor,
+	}
+
+	return copy
+}
+
+func (js JsonSchema) GetProperty(name string) optioner.Option[JsonSchema] {
+	if prop, ok := js.Properties[name]; ok {
+		return optioner.Some(*prop)
+	}
+
+	return optioner.None[JsonSchema]()
+}
 
 func (js JsonSchema) IsRequired() trier.Try[bool] {
 	return trier.Success(false)

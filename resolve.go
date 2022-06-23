@@ -46,6 +46,23 @@ func (t *System) ResolveSchema(obj *JsonSchema) error {
 			sch := ref.Get()
 			obj.Properties[name] = &sch
 		}
+
+		if prop.Type.Defined() && prop.Type.Get() == objecttype.Array {
+			if prop.Items == nil {
+				return ErrArrayItemMissing
+			}
+
+			if prop.Items.Ref.Defined() {
+				ref := t.ById(prop.Ref.Get())
+
+				if ref.Empty() {
+					return ErrSchemaNotFoundV(prop.Ref.Get())
+				}
+
+				sch := ref.Get()
+				prop.Items = &sch
+			}
+		}
 	}
 
 	return nil

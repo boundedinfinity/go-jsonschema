@@ -36,6 +36,7 @@ var (
 	ErrObjectTypeEmpty          = errors.New("type cannot be empty")
 	ErrStringFormatInvalid      = errors.New("invalid string format")
 	ErrStringFormatUnsupported  = errors.New("unsupported string format")
+	ErrArrayItemMissing         = errors.New("unsupported string format")
 )
 
 // Validation Errors
