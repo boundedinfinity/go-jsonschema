@@ -1,5 +1,7 @@
 package stringformat
 
+//go:generate enumer -path=./main.go
+
 type StringFormat string
 
 const (

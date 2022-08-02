@@ -1,5 +1,7 @@
 package objecttype
 
+//go:generate enumer -path=./main.go
+
 type ObjectType string
 
 const (
