@@ -6,7 +6,7 @@
 //*                                                                                  *
 //************************************************************************************
 
-package objecttype
+package schematype
 
 import (
 	"encoding/json"
@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	All = []ObjectType{
+	All = []SchemaType{
 		String,
 		Number,
 		Integer,
@@ -29,17 +29,17 @@ var (
 	}
 )
 
-func pred(s string) func(ObjectType) bool {
-	return func(v ObjectType) bool {
+func pred(s string) func(SchemaType) bool {
+	return func(v SchemaType) bool {
 		return string(v) == s
 	}
 }
 
-func (t ObjectType) String() string {
+func (t SchemaType) String() string {
 	return string(t)
 }
 
-func Parse(v string) (ObjectType, error) {
+func Parse(v string) (SchemaType, error) {
 	f, ok := slices.FindFn(All, pred(v))
 
 	if !ok {
@@ -50,7 +50,7 @@ func Parse(v string) (ObjectType, error) {
 }
 
 func Is(s string) bool {
-	return slices.ContainsFn(All, func(v ObjectType) bool {
+	return slices.ContainsFn(All, func(v SchemaType) bool {
 		return string(v) == s
 	})
 }
@@ -64,11 +64,11 @@ func ErrorV(v string) error {
 	)
 }
 
-func (t ObjectType) MarshalJSON() ([]byte, error) {
+func (t SchemaType) MarshalJSON() ([]byte, error) {
 	return json.Marshal(string(t))
 }
 
-func (t *ObjectType) UnmarshalJSON(data []byte) error {
+func (t *SchemaType) UnmarshalJSON(data []byte) error {
 	var s string
 
 	if err := json.Unmarshal(data, &s); err != nil {
@@ -86,11 +86,11 @@ func (t *ObjectType) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (t ObjectType) MarshalYAML() (interface{}, error) {
+func (t SchemaType) MarshalYAML() (interface{}, error) {
 	return string(t), nil
 }
 
-func (t *ObjectType) UnmarshalYAML(unmarshal func(interface{}) error) error {
+func (t *SchemaType) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var s string
 
 	if err := unmarshal(&s); err != nil {

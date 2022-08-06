@@ -1,8 +1,9 @@
 package jsonschema
 
 import (
+	"github.com/boundedinfinity/jsonschema/model"
 	"github.com/boundedinfinity/mimetyper/file_extention"
-	"github.com/boundedinfinity/optioner"
+	o "github.com/boundedinfinity/optioner"
 )
 
 var (
@@ -13,17 +14,10 @@ var (
 	}
 )
 
-func mkExt(ft file_extention.FileExtention) string {
-	return ".schema" + ft.String()
-}
-
 func New() *System {
 	sys := System{
-		Schema:     JsonSchema{},
 		Extentions: default_extentions,
 	}
-
-	sys.Clear()
 
 	return &sys
 }
@@ -31,37 +25,42 @@ func New() *System {
 type System struct {
 	Extentions []string
 	SourceMap  map[string]string
-	IdMap      map[string]JsonSchema
-	Schema     JsonSchema
+	IdMap      map[string]model.JsonSchema
+	Schema     model.JsonSchema
 }
 
-func (t *System) ById(id string) optioner.Option[JsonSchema] {
+func (t *System) HasId(id string) bool {
+	_, ok := t.IdMap[id]
+	return ok
+}
+
+func (t *System) ById(id string) o.Option[model.JsonSchema] {
 	if s, ok := t.IdMap[id]; ok {
-		return optioner.Some(s)
+		return o.Some(s)
 	} else {
-		return optioner.None[JsonSchema]()
+		return o.None[model.JsonSchema]()
 	}
 }
 
-func (t *System) ByFileKey(id string) optioner.Option[JsonSchema] {
-	if id, ok := t.SourceMap[id]; ok {
-		return t.ById(id)
-	} else {
-		return optioner.None[JsonSchema]()
-	}
-}
+// func (t *System) ByFileKey(id string) optioner.Option[JsonSchema] {
+// 	if id, ok := t.SourceMap[id]; ok {
+// 		return t.ById(id)
+// 	} else {
+// 		return optioner.None[JsonSchema]()
+// 	}
+// }
 
-func (t *System) GetFileKey(id string) optioner.Option[string] {
-	for id2, key := range t.SourceMap {
-		if id == id2 {
-			return optioner.Some(key)
-		}
-	}
+// func (t *System) GetFileKey(id string) optioner.Option[string] {
+// 	for id2, key := range t.SourceMap {
+// 		if id == id2 {
+// 			return optioner.Some(key)
+// 		}
+// 	}
 
-	return optioner.None[string]()
-}
+// 	return optioner.None[string]()
+// }
 
-func (t *System) Clear() {
-	t.SourceMap = make(map[string]string)
-	t.IdMap = make(map[string]JsonSchema)
-}
+// func (t *System) Clear() {
+// 	t.SourceMap = make(map[string]string)
+// 	t.IdMap = make(map[string]JsonSchema)
+// }

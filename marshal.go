@@ -8,11 +8,12 @@ import (
 	"io"
 	"strings"
 
+	"github.com/boundedinfinity/jsonschema/model"
 	"github.com/boundedinfinity/mimetyper/mime_type"
 	"gopkg.in/yaml.v2"
 )
 
-func (t *System) Unmarshal(ss *[]JsonSchema, mt mime_type.MimeType, bs []byte) error {
+func (t *System) Unmarshal(ss *[]model.JsonSchema, mt mime_type.MimeType, bs []byte) error {
 	realmt := mime_type.ResolveMimeType(mt)
 
 	switch realmt {
@@ -25,12 +26,11 @@ func (t *System) Unmarshal(ss *[]JsonSchema, mt mime_type.MimeType, bs []byte) e
 	}
 }
 
-func (t *System) unmarshalYaml(ss *[]JsonSchema, bs []byte) error {
+func (t *System) unmarshalYaml(ss *[]model.JsonSchema, bs []byte) error {
 	d := yaml.NewDecoder(bytes.NewReader(bs))
 
 	for {
-		s := new(JsonSchema)
-
+		s := new(model.JsonSchema)
 		err := d.Decode(&s)
 
 		if errors.Is(err, io.EOF) {
@@ -51,20 +51,22 @@ func (t *System) unmarshalYaml(ss *[]JsonSchema, bs []byte) error {
 	return nil
 }
 
-func (t *System) unmarshalJson(ss *[]JsonSchema, bs []byte) error {
+func (t *System) unmarshalJson(ss *[]model.JsonSchema, bs []byte) error {
 	s := string(bs)
 	s = strings.TrimSpace(s)
 	f := s[0:1]
 
 	switch f {
 	case "{":
-		var x JsonSchema
+		var x model.JsonSchema
+
 		if err := json.Unmarshal(bs, &s); err != nil {
 			return err
 		}
+
 		*ss = append(*ss, x)
 	case "[":
-		var xs []JsonSchema
+		var xs []model.JsonSchema
 
 		if err := json.Unmarshal(bs, &xs); err != nil {
 			return err
@@ -72,7 +74,7 @@ func (t *System) unmarshalJson(ss *[]JsonSchema, bs []byte) error {
 
 		*ss = append(*ss, xs...)
 	default:
-		return fmt.Errorf("unsupported file type")
+		return fmt.Errorf("unsupported JSON")
 	}
 
 	return nil

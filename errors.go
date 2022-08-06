@@ -5,22 +5,33 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/boundedinfinity/jsonschema/objecttype"
+	"github.com/boundedinfinity/jsonschema/schematype"
 	"github.com/boundedinfinity/jsonschema/stringformat"
 	"github.com/boundedinfinity/mimetyper/mime_type"
-	"github.com/boundedinfinity/optioner"
+	o "github.com/boundedinfinity/optioner"
 )
 
 var (
-	ErrUnsupportedFileType      = errors.New("unsupported file type")
-	ErrIdEmpty                  = errors.New("json schema ID empty")
-	ErrSchemaNotFound           = errors.New("json schema not found")
-	ErrPropertyNotFound         = errors.New("property not found")
-	ErrUriTypeUnsupported       = errors.New("unknown uri type")
-	ErrMimeTypeUnsupported      = errors.New("unknown MEME type")
-	ErrMimeTypeUndetected       = errors.New("undeteched MIME type")
-	ErrDuplicateDef             = errors.New("duplicate $def")
-	ErrUnsupportedSchemaType    = errors.New("unsupported schema type")
+	ErrFileTypeUnsupported      = errors.New("unsupported file type")
+	ErrFileTypeUnsupportedFilef = func(path string, extentions []string) error {
+		return fmt.Errorf("%v %w : must be one of %v", path, ErrFileTypeUnsupported, strings.Join(extentions, ", "))
+	}
+
+	ErrIdEmpty                = errors.New("json schema ID empty")
+	ErrIdEmptyf               = func(key string) error { return fmt.Errorf("%v : %w", key, ErrIdEmpty) }
+	ErrSchemaTypeMissing      = errors.New("missing schema type")
+	ErrSchemaTypeUnsupported  = errors.New("unsupported schema type")
+	ErrSchemaTypeUnsupportedV = func(v schematype.SchemaType) error { return errV(v.String(), ErrSchemaTypeUnsupported) }
+
+	ErrSchemaNotFound    = errors.New("json schema not found")
+	ErrPropertyNotFound  = errors.New("property not found")
+	ErrPropertyNotFoundV = func(propname string) error { return fmt.Errorf("%v : %w", propname, ErrPropertyNotFound) }
+
+	ErrUriTypeUnsupported  = errors.New("unknown uri type")
+	ErrMimeTypeUnsupported = errors.New("unknown MEME type")
+	ErrMimeTypeUndetected  = errors.New("undeteched MIME type")
+	ErrDuplicateDef        = errors.New("duplicate $def")
+
 	ErrRefNotFound              = errors.New("reference not found")
 	ErrInvalidMultipleOf        = errors.New("multipleOf must be greater than 0")
 	ErrInvalidMaxContains       = errors.New("maxContains must be a non-negative integer")
@@ -58,18 +69,6 @@ var (
 	ErrIsGreaterThanOrEqualTof = func(v, x int) error { return fmt.Errorf("%v %v %v", v, ErrIsGreaterThanOrEqualTo, x) }
 )
 
-func ErrPropertyNotFoundV(propname string) error {
-	return fmt.Errorf("%v : %w", propname, ErrPropertyNotFound)
-}
-
-func ErrIdEmptyf(key string) error {
-	return fmt.Errorf("%v : %w", key, ErrIdEmpty)
-}
-
-func ErrUnsupportedFileTypef(path string, extentions []string) error {
-	return fmt.Errorf("%v %w : must be one of %v", path, ErrUnsupportedFileType, strings.Join(extentions, ", "))
-}
-
 func ErrUriTypeUnsupportedV(v string) error { return errV(v, ErrUriTypeUnsupported) }
 
 func ErrMimeTypeUnsupportedV(v mime_type.MimeType) error {
@@ -79,20 +78,16 @@ func ErrMimeTypeUnsupportedV(v mime_type.MimeType) error {
 func ErrDuplicateDefV(v string) error { return errV(v, ErrDuplicateDef) }
 func ErrRefNotFoundV(v string) error  { return errV(v, ErrRefNotFound) }
 
-func ErrUnsupportedSchemaTypeV(v objecttype.ObjectType) error {
-	return errV(v.String(), ErrUnsupportedSchemaType)
-}
-
 func ErrSchemaNotFoundV(v string) error { return errV(v, ErrSchemaNotFound) }
 func ErrStringInvalidPatternV(v string, err error) error {
 	return fmt.Errorf("%v : %v : %w", v, ErrStringInvalidPattern, err)
 }
 
-func ErrStringFormatInvalidV(v optioner.Option[stringformat.StringFormat]) error {
+func ErrStringFormatInvalidV(v o.Option[stringformat.StringFormat]) error {
 	return errV(v.Get().String(), ErrStringFormatInvalid)
 }
 
-func ErrStringFormatUnsupportedV(v optioner.Option[stringformat.StringFormat]) error {
+func ErrStringFormatUnsupportedV(v o.Option[stringformat.StringFormat]) error {
 	return errV(v.Get().String(), ErrStringFormatUnsupported)
 }
 
