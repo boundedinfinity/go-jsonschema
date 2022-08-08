@@ -14,7 +14,6 @@ import (
 	"fmt"
 
 	"github.com/boundedinfinity/commons/slices"
-	"github.com/boundedinfinity/commons/strings"
 )
 
 var (
@@ -29,18 +28,14 @@ var (
 	}
 )
 
-func pred(s string) func(SchemaType) bool {
-	return func(v SchemaType) bool {
-		return string(v) == s
-	}
-}
-
 func (t SchemaType) String() string {
 	return string(t)
 }
 
 func Parse(v string) (SchemaType, error) {
-	f, ok := slices.FindFn(All, pred(v))
+	f, ok := slices.FindFn(All, func(x SchemaType) bool {
+		return SchemaType(v) == x
+	})
 
 	if !ok {
 		return f, ErrorV(v)
@@ -60,7 +55,7 @@ var ErrInvalid = errors.New("invalid enumeration type")
 func ErrorV(v string) error {
 	return fmt.Errorf(
 		"%w '%v', must be one of %v",
-		ErrInvalid, v, strings.Join(All, ","),
+		ErrInvalid, v, slices.Join(All, ","),
 	)
 }
 
@@ -69,13 +64,13 @@ func (t SchemaType) MarshalJSON() ([]byte, error) {
 }
 
 func (t *SchemaType) UnmarshalJSON(data []byte) error {
-	var s string
+	var v string
 
-	if err := json.Unmarshal(data, &s); err != nil {
+	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
 
-	e, err := Parse(s)
+	e, err := Parse(v)
 
 	if err != nil {
 		return err
@@ -91,13 +86,13 @@ func (t SchemaType) MarshalYAML() (interface{}, error) {
 }
 
 func (t *SchemaType) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	var s string
+	var v string
 
-	if err := unmarshal(&s); err != nil {
+	if err := unmarshal(&v); err != nil {
 		return err
 	}
 
-	e, err := Parse(s)
+	e, err := Parse(v)
 
 	if err != nil {
 		return err

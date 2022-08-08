@@ -3,7 +3,7 @@ package model
 import o "github.com/boundedinfinity/optioner"
 
 type JsonSchemaNumber[T ~int64 | ~float64] struct {
-	JsonSchemaGeneric[T]
+	JsonSchemaCommon
 	ExclusiveMaximum o.Option[T] `json:"exclusiveMaximum" yaml:"exclusiveMaximum"`
 	ExclusiveMinimum o.Option[T] `json:"exclusiveMinimum" yaml:"exclusiveMinimum"`
 	Maximum          o.Option[T] `json:"maximum" yaml:"maximum"`

@@ -6,7 +6,7 @@ import (
 )
 
 type JsonSchemaString[T ~string] struct {
-	JsonSchemaGeneric[string]
+	JsonSchemaCommon
 	Format          o.Option[stringformat.StringFormat] `json:"format,omitempty" yaml:"format,omitempty"`
 	Enum            o.Option[[]T]                       `json:"enum,omitempty" yaml:"enum,omitempty"`
 	MaxLength       o.Option[int]                       `json:"maxLength,omitempty" yaml:"maxLength,omitempty"`
