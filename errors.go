@@ -7,7 +7,6 @@ import (
 
 	"github.com/boundedinfinity/jsonschema/schematype"
 	"github.com/boundedinfinity/jsonschema/stringformat"
-	"github.com/boundedinfinity/mimetyper/mime_type"
 	o "github.com/boundedinfinity/optioner"
 )
 
@@ -27,10 +26,9 @@ var (
 	ErrPropertyNotFound  = errors.New("property not found")
 	ErrPropertyNotFoundV = func(propname string) error { return fmt.Errorf("%v : %w", propname, ErrPropertyNotFound) }
 
-	ErrUriTypeUnsupported  = errors.New("unknown uri type")
-	ErrMimeTypeUnsupported = errors.New("unknown MEME type")
-	ErrMimeTypeUndetected  = errors.New("undeteched MIME type")
-	ErrDuplicateDef        = errors.New("duplicate $def")
+	ErrUriTypeUnsupported = errors.New("unknown uri type")
+	ErrMimeTypeUndetected = errors.New("undeteched MIME type")
+	ErrDuplicateDef       = errors.New("duplicate $def")
 
 	ErrRefNotFound              = errors.New("reference not found")
 	ErrInvalidMultipleOf        = errors.New("multipleOf must be greater than 0")
@@ -70,10 +68,6 @@ var (
 )
 
 func ErrUriTypeUnsupportedV(v string) error { return errV(v, ErrUriTypeUnsupported) }
-
-func ErrMimeTypeUnsupportedV(v mime_type.MimeType) error {
-	return errV(v.String(), ErrMimeTypeUnsupported)
-}
 
 func ErrDuplicateDefV(v string) error { return errV(v, ErrDuplicateDef) }
 func ErrRefNotFoundV(v string) error  { return errV(v, ErrRefNotFound) }

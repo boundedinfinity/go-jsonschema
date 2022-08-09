@@ -1,6 +1,7 @@
 package model
 
 import (
+	"github.com/boundedinfinity/jsonschema/schematype"
 	"github.com/boundedinfinity/jsonschema/stringformat"
 	o "github.com/boundedinfinity/optioner"
 )
@@ -13,4 +14,14 @@ type JsonSchemaString[T ~string] struct {
 	MinLength       o.Option[int]                       `json:"minLength,omitempty" yaml:"minLength,omitempty"`
 	Pattern         o.Option[T]                         `json:"pattern,omitempty" yaml:"pattern,omitempty"`
 	EnumDescription o.Option[map[T]string]              `json:"enum-description,omitempty" yaml:"enum-description,omitempty"`
+}
+
+func NewString[T ~string](id string) JsonSchemaString[T] {
+	return JsonSchemaString[T]{
+		JsonSchemaCommon: JsonSchemaCommon{
+			Schema: o.Some(SCHEMA_VERSION_2020_12),
+			Type:   o.Some(schematype.String),
+			Id:     o.Some(id),
+		},
+	}
 }

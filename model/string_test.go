@@ -32,7 +32,24 @@ func Test_String_Marshal(t *testing.T) {
 	input := createString()
 
 	actual, err := json.Marshal(input)
-	expected := `{"$id":"https://www.boundedinfinity.com/schema/string-1","$ref":null, "$schema":"https://json-schema.org/draft/2020-12/schema","type":"string","$comment":null,"default":null,"deprecated":null,"description":null,"examples":null,"title":null,"readOnly":null,"writeOnly":null,"format":null,"enum":null,"maxLength":null,"minLength":null,"pattern":null,"enum-description":null}`
+	expected := `{
+		"$id":"https://www.boundedinfinity.com/schema/string-1",
+		"$ref":null, 
+		"$schema":"https://json-schema.org/draft/2020-12/schema",
+		"type":"string",
+		"$comment":null,
+		"deprecated":null,
+		"description":null,
+		"title":null,
+		"readOnly":null,
+		"writeOnly":null,
+		"format":null,
+		"enum":null,
+		"maxLength":null,
+		"minLength":null,
+		"pattern":null,
+		"enum-description":null
+	}`
 
 	assert.Nil(t, err)
 	assert.JSONEq(t, expected, string(actual))
@@ -41,7 +58,11 @@ func Test_String_Marshal(t *testing.T) {
 func Test_String_Unmarshal(t *testing.T) {
 	expected := createString()
 	var actual model.JsonSchemaString[string]
-	input := `{"$id": "https://www.boundedinfinity.com/schema/string-1", "type": "string", "$schema":"https://json-schema.org/draft/2020-12/schema"}`
+	input := `{
+		"$id": "https://www.boundedinfinity.com/schema/string-1", 
+		"type": "string", 
+		"$schema":"https://json-schema.org/draft/2020-12/schema"
+	}`
 
 	err := json.Unmarshal([]byte(input), &actual)
 
