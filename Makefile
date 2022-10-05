@@ -1,6 +1,6 @@
 makefile_dir		:= $(abspath $(shell pwd))
 
-.PHONY: list bootstrap init build
+.PHONY: list purge build install generate test commit tag publish
 
 list:
 	@grep '^[^#[:space:]].*:' Makefile | grep -v ':=' | grep -v '^\.' | sed 's/:.*//g' | sed 's/://g' | sort
@@ -9,18 +9,21 @@ purge:
 	rm -rf objecttype/*.enum.go
 	rm -rf stringformat/*.enum.go
 
-build:
+build: generate
 	go build
 
-install:
+install: generate
 	go install
 
 generate:
 	go generate ./...
 
+test: generate
+	go test ./...
+
 commit:
 	git add . || true
-	git commit -m "$(m)"
+	git commit -m "$(m)" || true
 	git push origin master
 
 tag:
@@ -28,5 +31,6 @@ tag:
 	git push origin $(tag)
 
 publish: generate
-	make commit m=$(tag)
-	make tag tag=$(tag)
+	@if ack replace go.mod ;then echo 'Remove the "replace" line from the go.mod file'; exit 1; fi
+	make commit m=$(m)
+	make tag tag=$(m)

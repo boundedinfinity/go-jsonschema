@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/boundedinfinity/jsonschema/model"
-	"github.com/boundedinfinity/jsonschema/schematype"
-	o "github.com/boundedinfinity/optioner"
+	o "github.com/boundedinfinity/go-commoner/optioner"
+	"github.com/boundedinfinity/go-jsonschema/model"
+	"github.com/boundedinfinity/go-jsonschema/schematype"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -1,8 +1,8 @@
 package model
 
 import (
-	"github.com/boundedinfinity/jsonschema/schematype"
-	o "github.com/boundedinfinity/optioner"
+	o "github.com/boundedinfinity/go-commoner/optioner"
+	"github.com/boundedinfinity/go-jsonschema/schematype"
 )
 
 type JsonSchema interface {

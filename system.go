@@ -1,9 +1,9 @@
 package jsonschema
 
 import (
-	"github.com/boundedinfinity/jsonschema/model"
+	o "github.com/boundedinfinity/go-commoner/optioner"
+	"github.com/boundedinfinity/go-jsonschema/model"
 	"github.com/boundedinfinity/mimetyper/file_extention"
-	o "github.com/boundedinfinity/optioner"
 )
 
 var (

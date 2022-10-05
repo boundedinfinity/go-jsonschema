@@ -1,6 +1,6 @@
 package model
 
-import o "github.com/boundedinfinity/optioner"
+import o "github.com/boundedinfinity/go-commoner/optioner"
 
 type JsonSchemaObject struct {
 	Properties    o.Option[map[string]JsonSchema] `json:"properties" yaml:"properties"`

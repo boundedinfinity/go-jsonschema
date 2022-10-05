@@ -3,7 +3,7 @@ package jsonschema_test
 // import (
 // 	"testing"
 
-// 	"github.com/boundedinfinity/jsonschema"
+// 	"github.com/boundedinfinity/go-jsonschema"
 // 	"github.com/stretchr/testify/assert"
 // )
 

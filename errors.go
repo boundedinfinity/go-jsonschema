@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/boundedinfinity/jsonschema/schematype"
-	"github.com/boundedinfinity/jsonschema/stringformat"
-	o "github.com/boundedinfinity/optioner"
+	o "github.com/boundedinfinity/go-commoner/optioner"
+	"github.com/boundedinfinity/go-jsonschema/schematype"
+	"github.com/boundedinfinity/go-jsonschema/stringformat"
 )
 
 var (

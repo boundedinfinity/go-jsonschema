@@ -1,6 +1,6 @@
 package model
 
-import o "github.com/boundedinfinity/optioner"
+import o "github.com/boundedinfinity/go-commoner/optioner"
 
 type JsonSchema2 struct {
 	Anchor               o.Option[string]       `json:"$anchor" yaml:"$anchor"`

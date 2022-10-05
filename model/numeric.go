@@ -1,6 +1,6 @@
 package model
 
-import o "github.com/boundedinfinity/optioner"
+import o "github.com/boundedinfinity/go-commoner/optioner"
 
 type JsonSchemaNumber[T ~int64 | ~float64] struct {
 	JsonSchemaCommon
