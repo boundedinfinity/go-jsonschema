@@ -6,11 +6,8 @@ import (
 )
 
 type JsonSchema interface {
-	String() string
-	GetId() o.Option[string]
+	// String() string
 	GetType() o.Option[schematype.SchemaType]
-	GetRef() o.Option[string]
-	Validate() error
 }
 
 type JsonSchemaCommon struct {
@@ -28,14 +25,6 @@ type JsonSchemaCommon struct {
 	WriteOnly o.Option[bool]   `json:"writeOnly" yaml:"writeOnly"`
 }
 
-func (t JsonSchemaCommon) GetId() o.Option[string] {
-	return t.Id
-}
-
 func (t JsonSchemaCommon) GetType() o.Option[schematype.SchemaType] {
 	return t.Type
-}
-
-func (t JsonSchemaCommon) GetRef() o.Option[string] {
-	return t.Ref
 }

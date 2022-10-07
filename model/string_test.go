@@ -13,8 +13,8 @@ import (
 var schema = "https://json-schema.org/draft/2020-12/schema"
 var id = "https://www.boundedinfinity.com/schema/string-1"
 
-func createString() model.JsonSchemaString[string] {
-	return model.JsonSchemaString[string]{
+func createString() model.JsonSchemaString {
+	return model.JsonSchemaString{
 		JsonSchemaCommon: model.JsonSchemaCommon{
 			Id:     o.Some(id),
 			Schema: o.Some(schema),
@@ -57,7 +57,7 @@ func Test_String_Marshal(t *testing.T) {
 
 func Test_String_Unmarshal(t *testing.T) {
 	expected := createString()
-	var actual model.JsonSchemaString[string]
+	var actual model.JsonSchemaString
 	input := `{
 		"$id": "https://www.boundedinfinity.com/schema/string-1", 
 		"type": "string", 

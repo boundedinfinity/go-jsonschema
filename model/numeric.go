@@ -2,7 +2,7 @@ package model
 
 import o "github.com/boundedinfinity/go-commoner/optioner"
 
-type JsonSchemaNumber[T ~int64 | ~float64] struct {
+type jsonSchemaNumeric[T int64 | float64] struct {
 	JsonSchemaCommon
 	ExclusiveMaximum o.Option[T] `json:"exclusiveMaximum" yaml:"exclusiveMaximum"`
 	ExclusiveMinimum o.Option[T] `json:"exclusiveMinimum" yaml:"exclusiveMinimum"`
@@ -11,6 +11,10 @@ type JsonSchemaNumber[T ~int64 | ~float64] struct {
 	MultipleOf       o.Option[T] `json:"multipleOf" yaml:"multipleOf"`
 }
 
-type JsonSchemaInteger[T ~int64] struct {
-	JsonSchemaNumber[T]
+type JsonSchemaInteger struct {
+	jsonSchemaNumeric[int64]
+}
+
+type JsonSchemaNumber struct {
+	jsonSchemaNumeric[float64]
 }
