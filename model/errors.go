@@ -1,27 +1,22 @@
 package model
 
 import (
-	"errors"
-
 	"github.com/boundedinfinity/go-commoner/errorer"
 )
 
 var (
-	ErrSchemaTypeMissing     = errors.New("json schema type missing")
-	ErrSchemaTypeUnsupported = errors.New("json schema type unsupported")
+	ErrSchemaTypeNotFound      = errorer.Errorf("json schema type not found")
+	ErrSchemaTypeUnsupported   = errorer.Errorf("json schema type unsupported")
+	ErrSchemaTypeUnsupportedv  = errorer.Errorfn(ErrSchemaTypeUnsupported)
+	ErrSchemaIdNotFound        = errorer.Errorf("json schema ID not found")
+	ErrSchemaIdDuplicate       = errorer.Errorf("json schema ID duplicate")
+	ErrSchemaIdDuplicatev      = errorer.Errorfn(ErrSchemaIdDuplicate)
+	ErrSchemaNotFound          = errorer.Errorf("json schema not found")
+	ErrSchemaNotFoundv         = errorer.Errorfn(ErrSchemaNotFound)
+	ErrRefNotFound             = errorer.Errorf("reference not found")
+	ErrRefNotFoundv            = errorer.Errorfn(ErrRefNotFound)
+	ErrSchemaTypeOrRefNotFound = errorer.Errorf("json schema type or $ref not found missing")
 
-	// ErrFileTypeUnsupported = errors.New("unsupported schema type")
-	// ErrFileTypeUnsupportedFilef = func(path string, extentions []string) error {
-	// 	return fmt.Errorf("%v %w : must be one of %v", path, ErrFileTypeUnsupported, strings.Join(extentions, ", "))
-	// }
-
-	// ErrIdEmpty                = errors.New("json schema ID empty")
-	// ErrIdEmptyf               = func(key string) error { return fmt.Errorf("%v : %w", key, ErrIdEmpty) }
-	// ErrSchemaTypeMissing      = errors.New("missing schema type")
-	// ErrSchemaTypeUnsupported  = errors.New("unsupported schema type")
-	// ErrSchemaTypeUnsupportedV = func(v schematype.SchemaType) error { return errV(v.String(), ErrSchemaTypeUnsupported) }
-
-	// ErrSchemaNotFound    = errors.New("json schema not found")
 	// ErrPropertyNotFound  = errors.New("property not found")
 	// ErrPropertyNotFoundV = func(propname string) error { return fmt.Errorf("%v : %w", propname, ErrPropertyNotFound) }
 
@@ -29,7 +24,6 @@ var (
 	// ErrMimeTypeUndetected = errors.New("undeteched MIME type")
 	// ErrDuplicateDef       = errors.New("duplicate $def")
 
-	// ErrRefNotFound              = errors.New("reference not found")
 	// ErrInvalidMultipleOf        = errors.New("multipleOf must be greater than 0")
 	// ErrInvalidMaxContains       = errors.New("maxContains must be a non-negative integer")
 	// ErrInvalidMaxLength         = errors.New("maxLength must be a non-negative integer")
@@ -50,7 +44,6 @@ var (
 // Validation Errors
 
 var (
-	ErrSchemaTypeUnsupportedV = errorer.Errorfn(ErrSchemaTypeUnsupported)
 
 // ErrNotMultipleOf  = errors.New("not a multiple of")
 // ErrNotMultipleOff = func(v, x int) error { return fmt.Errorf("%v %v %v", v, ErrNotMultipleOf, x) }
@@ -71,9 +64,7 @@ var (
 // func ErrUriTypeUnsupportedV(v string) error { return errV(v, ErrUriTypeUnsupported) }
 
 // func ErrDuplicateDefV(v string) error { return errV(v, ErrDuplicateDef) }
-// func ErrRefNotFoundV(v string) error  { return errV(v, ErrRefNotFound) }
 
-// func ErrSchemaNotFoundV(v string) error { return errV(v, ErrSchemaNotFound) }
 // func ErrStringInvalidPatternV(v string, err error) error {
 // 	return fmt.Errorf("%v : %v : %w", v, ErrStringInvalidPattern, err)
 // }

@@ -1,33 +1,42 @@
 package jsonschema_test
 
-// func getTestDataPath(filename string) string {
-// 	dir, err := os.Getwd()
+import (
+	"testing"
 
-// 	if err != nil {
-// 		panic(err)
-// 	}
+	"github.com/boundedinfinity/go-jsonschema"
+	"github.com/boundedinfinity/go-jsonschema/model"
+	"github.com/boundedinfinity/go-jsonschema/testdata"
+	"github.com/stretchr/testify/assert"
+)
 
-// 	path := filepath.Join(dir, "testdata")
+func Test_Load_string_single(t *testing.T) {
+	path := testdata.GetTestDataPath("strings/single.schema.yaml")
+	sys := jsonschema.New()
+	err := sys.Load(path)
 
-// 	if filename != "" {
-// 		path = filepath.Join(path, filename)
-// 	}
+	assert.Nil(t, err)
+}
 
-// 	return path
-// }
+func Test_Load_string_single_duplicate(t *testing.T) {
+	path := testdata.GetTestDataPath("strings/single.schema.yaml")
+	sys := jsonschema.New()
+	err := sys.Load(path, path)
 
-// func getTestDataKey(filename string, index int) string {
-// 	return fmt.Sprintf("%v:%v", getTestDataPath(filename), index)
-// }
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), model.ErrSchemaIdDuplicate.Error())
+}
 
-// func Test_Load_string_dir(t *testing.T) {
-// 	path := getTestDataPath("strings")
-// 	sys := jsonschema.New()
-// 	err := sys.Load(path)
+func Test_Load_string_ref(t *testing.T) {
+	path1 := testdata.GetTestDataPath("strings/single.schema.yaml")
+	path2 := testdata.GetTestDataPath("strings/ref.schema.yaml")
+	sys := jsonschema.New()
+	err := sys.Load(path1, path2)
 
-// 	assert.Nil(t, err)
-// 	assert.Equal(t, 4, len(sys.SourceMap))
-// }
+	assert.NotNil(t, err)
+
+	err = sys.Resolve()
+	assert.NotNil(t, err)
+}
 
 // func Test_Load_string_plain(t *testing.T) {
 // 	path := getTestDataPath("strings/plain.schema.yaml")

@@ -1,72 +1,119 @@
 package jsonschema
 
-// func (t *System) Load(paths ...string) error {
-// 	for _, path := range paths {
-// 		if err := fileutil.WalkFilePaths(path, t.hasExtention, t.walkProcess); err != nil {
-// 			return err
-// 		}
-// 	}
+import (
+	"net/url"
 
-// 	return nil
-// }
+	"github.com/boundedinfinity/go-commoner/pather"
+	"github.com/boundedinfinity/go-jsonschema/model"
+	"github.com/boundedinfinity/go-jsonschema/schematype"
+	"github.com/boundedinfinity/go-marshaler"
+)
 
-// func (t *System) hasExtention(path string) bool {
-// 	for _, ext := range t.Extentions {
-// 		if strings.HasSuffix(path, ext) {
-// 			return true
-// 		}
-// 	}
+func (t *System) Load(urls ...string) error {
+	var realUrls []*url.URL
 
-// 	return false
-// }
+	for _, rawUrl := range urls {
+		realUrl, err := url.Parse(rawUrl)
 
-// func (t *System) walkProcess(path string) error {
-// 	var mt mime_type.MimeType
+		if err != nil {
+			return err
+		}
 
-// 	if err := t.detechMimeType(path, &mt); err != nil {
-// 		return err
-// 	}
+		realUrls = append(realUrls, realUrl)
+	}
 
-// 	bs, err := os.ReadFile(path)
+	for _, realUrl := range realUrls {
+		if realUrl.Scheme == "file" {
+			err := t.loadPath(realUrl.Path)
 
-// 	if err != nil {
-// 		return err
-// 	}
+			if err != nil {
+				return err
+			}
+		}
+	}
 
-// 	ss := []JsonSchema{}
+	return t.Resolve()
+}
 
-// 	if err := t.Unmarshal(&ss, mt, bs); err != nil {
-// 		return err
-// 	}
+func (t *System) loadPath(path string) error {
+	ok, err := pather.IsDirErr(path)
 
-// 	for i, s := range ss {
-// 		key := fmt.Sprintf("%v:%v", path, i)
+	if err != nil {
+		return err
+	}
 
-// 		if s.Id.Empty() {
-// 			return ErrIdEmptyf(key)
-// 		}
+	if ok {
+		return t.loadDir(path)
+	}
 
-// 		t.SourceMap[key] = s.Id.Get()
+	return t.loadFile(path)
+}
 
-// 		if s.system == nil {
-// 			s.system = t
-// 		}
+func (t *System) loadDir(path string) error {
+	files, err := pather.GetFiles(path)
 
-// 		t.IdMap[s.Id.Get()] = s
-// 	}
+	if err != nil {
+		return err
+	}
 
-// 	return nil
-// }
+	for _, file := range files {
+		err = t.loadFile(file)
 
-// func (t *System) detechMimeType(path string, mt *mime_type.MimeType) error {
-// 	ext := filepath.Ext(path)
-// 	temp, err := file_extention.Extention2MimeType(ext)
+		if err != nil {
+			return err
+		}
+	}
 
-// 	if err != nil {
-// 		return err
-// 	}
+	return nil
+}
 
-// 	*mt = temp
+func (t *System) loadFile(path string) error {
+	d, _, err := marshaler.UnmarshalFromFile[model.JsonSchemaCommon](path)
 
-// 	return nil
-// }
+	if err != nil {
+		return err
+	}
+
+	if d.Type.Empty() && d.Ref.Empty() {
+		return model.ErrSchemaTypeOrRefNotFound
+	}
+
+	var schema model.JsonSchema
+
+	if d.Type.Defined() {
+		switch d.Type.Get() {
+		case schematype.String:
+			v, _, err := marshaler.UnmarshalFromFile[model.JsonSchemaString](path)
+
+			if err != nil {
+				return err
+			}
+
+			schema = v
+		case schematype.Integer:
+			v, _, err := marshaler.UnmarshalFromFile[model.JsonSchemaInteger](path)
+
+			if err != nil {
+				return err
+			}
+
+			schema = v
+		case schematype.Number:
+			v, _, err := marshaler.UnmarshalFromFile[model.JsonSchemaNumber](path)
+
+			if err != nil {
+				return err
+			}
+
+			schema = v
+		default:
+			return model.ErrSchemaTypeUnsupportedv(d.Type.Get())
+		}
+	}
+
+	if d.Ref.Defined() {
+		schema = d
+	}
+
+	return t.Register(schema)
+}

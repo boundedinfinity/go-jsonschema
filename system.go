@@ -13,12 +13,9 @@ func New() *System {
 }
 
 type System struct {
-	PathMap   mapper.Mapper[string, string]
-	SchemaMap mapper.Mapper[string, model.JsonSchema]
-	Schema    model.JsonSchema
+	schemaMap mapper.Mapper[string, model.JsonSchema]
 }
 
 func (t *System) Clear() {
-	t.PathMap = make(mapper.Mapper[string, string])
-	t.SchemaMap = make(mapper.Mapper[string, model.JsonSchema])
+	t.schemaMap = make(mapper.Mapper[string, model.JsonSchema])
 }

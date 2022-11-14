@@ -4,28 +4,51 @@ import (
 	"encoding/json"
 	"testing"
 
-	o "github.com/boundedinfinity/go-commoner/optioner"
 	"github.com/boundedinfinity/go-jsonschema/model"
-	"github.com/boundedinfinity/go-jsonschema/schematype"
 	"github.com/stretchr/testify/assert"
+	"gopkg.in/yaml.v2"
 )
 
 var schema = "https://json-schema.org/draft/2020-12/schema"
 var id = "https://www.boundedinfinity.com/schema/string-1"
 
 func createString() model.JsonSchemaString {
-	return model.JsonSchemaString{
-		JsonSchemaCommon: model.JsonSchemaCommon{
-			Id:     o.Some(id),
-			Schema: o.Some(schema),
-			Type:   o.Some(schematype.String),
-		},
-	}
+	return model.NewString(id)
 }
 
-func Test_String(t *testing.T) {
-	actual := createString()
-	assert.True(t, actual.Id.Defined())
+func Test_String_Unmarshal_Json(t *testing.T) {
+	expected := createString()
+	var actual model.JsonSchemaString
+	input := `{
+		"$id": "https://www.boundedinfinity.com/schema/string-1", 
+		"type": "string", 
+		"$schema":"https://json-schema.org/draft/2020-12/schema"
+	}`
+
+	err := json.Unmarshal([]byte(input), &actual)
+
+	assert.Nil(t, err)
+	assert.Equal(t, expected.Id.Defined(), actual.Id.Defined())
+	assert.Equal(t, expected.Id.Get(), actual.Id.Get())
+	assert.Equal(t, expected.Schema.Defined(), actual.Schema.Defined())
+	assert.Equal(t, expected.Schema.Get(), actual.Schema.Get())
+}
+
+func Test_String_Unmarshal_Yaml(t *testing.T) {
+	expected := createString()
+	var actual model.JsonSchemaString
+	input := `$id: https://www.boundedinfinity.com/schema/string-1
+$schema: https://json-schema.org/draft/2020-12/schema
+type: string
+`
+
+	err := yaml.Unmarshal([]byte(input), &actual)
+
+	assert.Nil(t, err)
+	assert.Equal(t, expected.Id.Defined(), actual.Id.Defined())
+	assert.Equal(t, expected.Id.Get(), actual.Id.Get())
+	assert.Equal(t, expected.Schema.Defined(), actual.Schema.Defined())
+	assert.Equal(t, expected.Schema.Get(), actual.Schema.Get())
 }
 
 func Test_String_Marshal(t *testing.T) {
@@ -53,22 +76,4 @@ func Test_String_Marshal(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.JSONEq(t, expected, string(actual))
-}
-
-func Test_String_Unmarshal(t *testing.T) {
-	expected := createString()
-	var actual model.JsonSchemaString
-	input := `{
-		"$id": "https://www.boundedinfinity.com/schema/string-1", 
-		"type": "string", 
-		"$schema":"https://json-schema.org/draft/2020-12/schema"
-	}`
-
-	err := json.Unmarshal([]byte(input), &actual)
-
-	assert.Nil(t, err)
-	assert.Equal(t, expected.Id.Defined(), actual.Id.Defined())
-	assert.Equal(t, expected.Id.Get(), actual.Id.Get())
-	assert.Equal(t, expected.Schema.Defined(), actual.Schema.Defined())
-	assert.Equal(t, expected.Schema.Get(), actual.Schema.Get())
 }
