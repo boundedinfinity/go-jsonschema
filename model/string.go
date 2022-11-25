@@ -7,48 +7,53 @@ import (
 	"github.com/boundedinfinity/go-jsonschema/stringformat"
 )
 
+func NewString() JsonSchema {
+	schema := &JsonSchemaString{
+		Schema: o.Some(SCHEMA_VERSION_2020_12),
+		Type:   o.Some(schematype.String),
+	}
+
+	return schema
+}
+
 type JsonSchemaString struct {
-	JsonSchemaCommon `yaml:",inline"`
-	Format           o.Option[stringformat.StringFormat]     `json:"format,omitempty" yaml:"format,omitempty"`
-	MaxLength        o.Option[int]                           `json:"maxLength,omitempty" yaml:"maxLength,omitempty"`
-	MinLength        o.Option[int]                           `json:"minLength,omitempty" yaml:"minLength,omitempty"`
-	Pattern          o.Option[string]                        `json:"pattern,omitempty" yaml:"pattern,omitempty"`
-	Enum             o.Option[[]string]                      `json:"enum,omitempty" yaml:"enum,omitempty"`
-	EnumDescription  o.Option[mapper.Mapper[string, string]] `json:"enum-description,omitempty" yaml:"enum-description,omitempty"`
+	Id              o.Option[IdT]                                    `json:"$id" yaml:"$id"`
+	Type            o.Option[schematype.SchemaType]                  `json:"type" yaml:"type"`
+	Schema          o.Option[SchemaT]                                `json:"$schema" yaml:"$schema"`
+	Comment         o.Option[CommentT]                               `json:"$comment" yaml:"$comment"`
+	Deprecated      o.Option[bool]                                   `json:"deprecated" yaml:"deprecated"`
+	Description     o.Option[DescriptionT]                           `json:"description" yaml:"description"`
+	Title           o.Option[TitleT]                                 `json:"title" yaml:"title"`
+	ReadOnly        o.Option[bool]                                   `json:"readOnly" yaml:"readOnly"`
+	WriteOnly       o.Option[bool]                                   `json:"writeOnly" yaml:"writeOnly"`
+	Format          o.Option[stringformat.StringFormat]              `json:"format,omitempty" yaml:"format,omitempty"`
+	MaxLength       o.Option[int]                                    `json:"maxLength,omitempty" yaml:"maxLength,omitempty"`
+	MinLength       o.Option[int]                                    `json:"minLength,omitempty" yaml:"minLength,omitempty"`
+	Pattern         o.Option[PatternT]                               `json:"pattern,omitempty" yaml:"pattern,omitempty"`
+	Enum            o.Option[[]EnumT]                                `json:"enum,omitempty" yaml:"enum,omitempty"`
+	EnumDescription o.Option[mapper.Mapper[EnumT, EnumDescriptionT]] `json:"enum-description,omitempty" yaml:"enum-description,omitempty"`
 }
 
-func NewString(id string) JsonSchemaString {
-	return JsonSchemaString{
-		JsonSchemaCommon: JsonSchemaCommon{
-			Schema: o.Some(SCHEMA_VERSION_2020_12),
-			Type:   o.Some(schematype.String),
-			Id:     o.Some(id),
-		},
-	}
+func (t JsonSchemaString) GetId() o.Option[IdT] {
+	return t.Id
 }
 
-func (t JsonSchemaString) Copy() JsonSchema {
-	return JsonSchemaString{
-		JsonSchemaCommon: t.JsonSchemaCommon.Copy().(JsonSchemaCommon),
-		Format:           t.Format,
-		MaxLength:        t.MaxLength,
-		MinLength:        t.MinLength,
-		Pattern:          t.Pattern,
-		Enum:             t.Enum,
-		EnumDescription:  t.EnumDescription,
-	}
+func (t JsonSchemaString) GetRef() o.Option[IdT] {
+	return o.None[IdT]()
 }
 
-func (t JsonSchemaString) Merge(other JsonSchema) JsonSchema {
-	internal := other.(JsonSchemaString)
+func (t JsonSchemaString) IsConcrete() bool {
+	return true
+}
 
-	return JsonSchemaString{
-		JsonSchemaCommon: t.JsonSchemaCommon.Merge(internal.JsonSchemaCommon).(JsonSchemaCommon),
-		Format:           internal.Format.OrFirst(t.Format),
-		MaxLength:        internal.MaxLength.OrFirst(t.MaxLength),
-		MinLength:        internal.MinLength.OrFirst(t.MinLength),
-		Pattern:          internal.Pattern.OrFirst(t.Pattern),
-		Enum:             internal.Enum.OrFirst(t.Enum),
-		EnumDescription:  internal.EnumDescription.OrFirst(t.EnumDescription),
+func (t JsonSchemaString) IsRef() bool {
+	return false
+}
+
+func (t JsonSchemaString) Validate() error {
+	if err := validateMaxMinLength(t.MaxLength, t.MinLength); err != nil {
+		return err
 	}
+
+	return nil
 }

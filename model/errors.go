@@ -5,82 +5,45 @@ import (
 )
 
 var (
-	ErrSchemaTypeNotFound      = errorer.Errorf("json schema type not found")
-	ErrSchemaTypeUnsupported   = errorer.Errorf("json schema type unsupported")
-	ErrSchemaTypeUnsupportedv  = errorer.Errorfn(ErrSchemaTypeUnsupported)
-	ErrSchemaIdNotFound        = errorer.Errorf("json schema ID not found")
-	ErrSchemaIdDuplicate       = errorer.Errorf("json schema ID duplicate")
-	ErrSchemaIdDuplicatev      = errorer.Errorfn(ErrSchemaIdDuplicate)
-	ErrSchemaNotFound          = errorer.Errorf("json schema not found")
-	ErrSchemaNotFoundv         = errorer.Errorfn(ErrSchemaNotFound)
-	ErrRefNotFound             = errorer.Errorf("reference not found")
-	ErrRefNotFoundv            = errorer.Errorfn(ErrRefNotFound)
-	ErrSchemaTypeOrRefNotFound = errorer.Errorf("json schema type or $ref not found missing")
-
-	// ErrPropertyNotFound  = errors.New("property not found")
-	// ErrPropertyNotFoundV = func(propname string) error { return fmt.Errorf("%v : %w", propname, ErrPropertyNotFound) }
-
-	// ErrUriTypeUnsupported = errors.New("unknown uri type")
-	// ErrMimeTypeUndetected = errors.New("undeteched MIME type")
-	// ErrDuplicateDef       = errors.New("duplicate $def")
-
-	// ErrInvalidMultipleOf        = errors.New("multipleOf must be greater than 0")
-	// ErrInvalidMaxContains       = errors.New("maxContains must be a non-negative integer")
-	// ErrInvalidMaxLength         = errors.New("maxLength must be a non-negative integer")
-	// ErrInvalidMinLength         = errors.New("minLength must be a non-negative integer")
-	// ErrInvalidMaxItems          = errors.New("maxItems must be a non-negative integer")
-	// ErrInvalidMinItems          = errors.New("minItems must be a non-negative integer")
-	// ErrInvalidArrayMissingItems = errors.New("type array must have items")
-	// ErrNotNonNegative           = errors.New("must be a non-negative integer")
-	// ErrNotInteger               = errors.New("must be integer")
-	// ErrMinGreaterThanMax        = errors.New("minLength cannot be greater than maxLength")
-	// ErrStringInvalidPattern     = errors.New("invalid pattern")
-	// ErrObjectTypeEmpty          = errors.New("type cannot be empty")
-	// ErrStringFormatInvalid      = errors.New("invalid string format")
-	// ErrStringFormatUnsupported  = errors.New("unsupported string format")
-	// ErrArrayItemMissing         = errors.New("unsupported string format")
+	ErrSchemaTypeNotFound       = errorer.Errorf("json schema type not found")
+	ErrSchemaTypeUnsupported    = errorer.Errorf("json schema type unsupported")
+	ErrSchemaTypeUnsupportedv   = errorer.Errorfn(ErrSchemaTypeUnsupported)
+	ErrSchemaIdNotFound         = errorer.Errorf("json schema ID not found")
+	ErrSchemaIdDuplicate        = errorer.Errorf("json schema ID duplicate")
+	ErrSchemaIdDuplicatev       = errorer.Errorfn(ErrSchemaIdDuplicate)
+	ErrPathDuplicate            = errorer.Errorf("json schema path duplicate")
+	ErrPathDuplicatev           = errorer.Errorfn(ErrPathDuplicate)
+	ErrSchemaNotFound           = errorer.Errorf("json schema not found")
+	ErrSchemaNotFoundv          = errorer.Errorfn(ErrSchemaNotFound)
+	ErrRefEmpty                 = errorer.Errorf("reference is empty")
+	ErrRefNotFound              = errorer.Errorf("reference not found")
+	ErrRefNotFoundv             = errorer.Errorfn(ErrRefNotFound)
+	ErrObjectPropertiesNotFound = errorer.Errorf("object properties not found")
+	ErrSchemaTypeOrRefNotFound  = errorer.Errorf("json schema type or $ref not found missing")
+	ErrMimeTypeUnsupported      = errorer.Errorf("MIME type unsupported")
+	ErrMimeTypeUnsupportedv     = errorer.Errorfn(ErrMimeTypeUnsupported)
+	ErrNumberMultipleOfInvalid  = errorer.Errorf("multipleOf must be greater than 0")
+	ErrNumberMultipleOfInvalidv = errorer.Errorfn(ErrNumberMultipleOfInvalid)
+	ErrArrayMaxContainsInvalid  = errorer.Errorf("maxContains must be greater than 0")
+	ErrArrayMaxContainsInvalidv = errorer.Errorfn(ErrArrayMaxContainsInvalid)
+	ErrArrayMinContainsInvalid  = errorer.Errorf("minContains must be greater than 0")
+	ErrArrayMinContainsInvalidv = errorer.Errorfn(ErrArrayMinContainsInvalid)
+	ErrArrayInvalidMaxMin       = errorer.Errorf("maxContains must be greater than minContains")
+	ErrArrayInvalidMaxMinv      = errorer.Errorfn(ErrArrayInvalidMaxMin)
+	ErrArrayItemsEmpty          = errorer.Errorf("array items is empty")
+	ErrNumberInvalidMaxMin      = errorer.Errorf("maximum must be greater than minimum")
+	ErrNumberInvalidMaxMinv     = errorer.Errorfn(ErrNumberInvalidMaxMin)
+	ErrStringMaxLength          = errorer.Errorf("maxLength must be greater than 0")
+	ErrStringMaxLengthv         = errorer.Errorfn(ErrStringMaxLength)
+	ErrStringMinLength          = errorer.Errorf("minLength must be greater than 0")
+	ErrStringMinLengthv         = errorer.Errorfn(ErrStringMinLength)
+	ErrStringMaxMinLength       = errorer.Errorf("maxLength must be greater than minLength")
+	ErrStringMaxMinLengthv      = errorer.Errorfn(ErrStringMaxMinLength)
+	ErrObjectMaxProperties      = errorer.Errorf("maxProperties must be greater than 0")
+	ErrObjectMaxPropertiesv     = errorer.Errorfn(ErrObjectMaxProperties)
+	ErrObjectMinProperties      = errorer.Errorf("minProperties must be greater than 0")
+	ErrObjectMinPropertiesv     = errorer.Errorfn(ErrObjectMinProperties)
+	ErrObjectMaxMinProperties   = errorer.Errorf("maxProperties must be greater than minProperties")
+	ErrObjectMaxMinPropertiesv  = errorer.Errorfn(ErrObjectMaxMinProperties)
+	ErrObjectPropertiesMissing  = errorer.Errorf("properties must be greater than 0")
 )
-
-// Validation Errors
-
-var (
-
-// ErrNotMultipleOf  = errors.New("not a multiple of")
-// ErrNotMultipleOff = func(v, x int) error { return fmt.Errorf("%v %v %v", v, ErrNotMultipleOf, x) }
-
-// ErrIsLessThan  = errors.New("is less than")
-// ErrIsLessThanf = func(v, x int) error { return fmt.Errorf("%v %v %v", v, ErrIsLessThan, x) }
-
-// ErrIsLessThanOrEqualTo  = errors.New("is less than or equal to")
-// ErrIsLessThanOrEqualTof = func(v, x int) error { return fmt.Errorf("%v %v %v", v, ErrIsLessThanOrEqualTo, x) }
-
-// ErrIsGreaterThan  = errors.New("is greater than")
-// ErrIsGreaterThanf = func(v, x int) error { return fmt.Errorf("%v %v %v", v, ErrIsGreaterThan, x) }
-
-// ErrIsGreaterThanOrEqualTo  = errors.New("is greater than or equal to")
-// ErrIsGreaterThanOrEqualTof = func(v, x int) error { return fmt.Errorf("%v %v %v", v, ErrIsGreaterThanOrEqualTo, x) }
-)
-
-// func ErrUriTypeUnsupportedV(v string) error { return errV(v, ErrUriTypeUnsupported) }
-
-// func ErrDuplicateDefV(v string) error { return errV(v, ErrDuplicateDef) }
-
-// func ErrStringInvalidPatternV(v string, err error) error {
-// 	return fmt.Errorf("%v : %v : %w", v, ErrStringInvalidPattern, err)
-// }
-
-// func ErrStringFormatInvalidV(v o.Option[stringformat.StringFormat]) error {
-// 	return errV(v.Get().String(), ErrStringFormatInvalid)
-// }
-
-// func ErrStringFormatUnsupportedV(v o.Option[stringformat.StringFormat]) error {
-// 	return errV(v.Get().String(), ErrStringFormatUnsupported)
-// }
-
-// func ErrMinGreaterThanMaxV(min, max int) error {
-// 	return fmt.Errorf("%v > %v : %w", min, max, ErrMinGreaterThanMax)
-// }
-
-// func errV(v string, err error) error {
-// 	return fmt.Errorf("%v : %w", v, err)
-// }

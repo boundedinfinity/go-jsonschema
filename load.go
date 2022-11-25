@@ -1,65 +1,15 @@
 package jsonschema
 
 import (
-	"net/url"
-
-	"github.com/boundedinfinity/go-commoner/pather"
 	"github.com/boundedinfinity/go-jsonschema/model"
-	"github.com/boundedinfinity/go-jsonschema/schematype"
 	"github.com/boundedinfinity/go-marshaler"
+	"github.com/boundedinfinity/mimetyper/mime_type"
+	"github.com/ghodss/yaml"
 )
 
-func (t *System) Load(urls ...string) error {
-	var realUrls []*url.URL
-
-	for _, rawUrl := range urls {
-		realUrl, err := url.Parse(rawUrl)
-
-		if err != nil {
-			return err
-		}
-
-		realUrls = append(realUrls, realUrl)
-	}
-
-	for _, realUrl := range realUrls {
-		if realUrl.Scheme == "file" {
-			err := t.loadPath(realUrl.Path)
-
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	return t.Resolve()
-}
-
-func (t *System) loadPath(path string) error {
-	ok, err := pather.IsDirErr(path)
-
-	if err != nil {
-		return err
-	}
-
-	if ok {
-		return t.loadDir(path)
-	}
-
-	return t.loadFile(path)
-}
-
-func (t *System) loadDir(path string) error {
-	files, err := pather.GetFiles(path)
-
-	if err != nil {
-		return err
-	}
-
-	for _, file := range files {
-		err = t.loadFile(file)
-
-		if err != nil {
+func (t *System) Load(paths ...string) error {
+	for _, path := range paths {
+		if err := t.loadPath(path); err != nil {
 			return err
 		}
 	}
@@ -67,53 +17,42 @@ func (t *System) loadDir(path string) error {
 	return nil
 }
 
-func (t *System) loadFile(path string) error {
-	d, _, err := marshaler.UnmarshalFromFile[model.JsonSchemaCommon](path)
+func (t *System) loadPath(path string) error {
+	if t.pathMap.Has(path) {
+		return model.ErrPathDuplicatev(path)
+	}
+
+	m, err := marshaler.ReadFromPath(path)
 
 	if err != nil {
 		return err
 	}
 
-	if d.Type.Empty() && d.Ref.Empty() {
-		return model.ErrSchemaTypeOrRefNotFound
-	}
+	for _, content := range m {
+		var bs []byte
+		var err error
 
-	var schema model.JsonSchema
-
-	if d.Type.Defined() {
-		switch d.Type.Get() {
-		case schematype.String:
-			v, _, err := marshaler.UnmarshalFromFile[model.JsonSchemaString](path)
+		switch content.MimeType {
+		case mime_type.ApplicationXYaml:
+			bs, err = yaml.YAMLToJSON(content.Data)
 
 			if err != nil {
 				return err
 			}
-
-			schema = v
-		case schematype.Integer:
-			v, _, err := marshaler.UnmarshalFromFile[model.JsonSchemaInteger](path)
-
-			if err != nil {
-				return err
-			}
-
-			schema = v
-		case schematype.Number:
-			v, _, err := marshaler.UnmarshalFromFile[model.JsonSchemaNumber](path)
-
-			if err != nil {
-				return err
-			}
-
-			schema = v
+		case mime_type.ApplicationJson:
+			bs = content.Data
 		default:
-			return model.ErrSchemaTypeUnsupportedv(d.Type.Get())
+			return model.ErrMimeTypeUnsupportedv(content.MimeType)
 		}
+
+		schema, err := model.UnmarshalSchema(bs)
+
+		if err != nil {
+			return err
+		}
+
+		t.pathMap[path] = schema
 	}
 
-	if d.Ref.Defined() {
-		schema = d
-	}
-
-	return t.Register(schema)
+	return nil
 }

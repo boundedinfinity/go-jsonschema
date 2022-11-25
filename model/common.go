@@ -1,78 +1,59 @@
 package model
 
 import (
+	"encoding/json"
 	"fmt"
 
+	"github.com/boundedinfinity/go-commoner/caser"
 	o "github.com/boundedinfinity/go-commoner/optioner"
+	"github.com/boundedinfinity/go-commoner/pather"
 	"github.com/boundedinfinity/go-jsonschema/schematype"
 )
 
+type IdT string
+type TitleT string
+type DescriptionT string
+type SchemaT string
+type CommentT string
+type PatternT string
+type EnumT string
+type EnumDescriptionT string
+
 type JsonSchema interface {
-	Copy() JsonSchema
-	Merge(JsonSchema) JsonSchema
-	GetType() o.Option[schematype.SchemaType]
-	GetRef() o.Option[string]
-	GetId() o.Option[string]
+	GetId() o.Option[IdT]
+	GetRef() o.Option[IdT]
+	IsConcrete() bool
+	IsRef() bool
+	Validate() error
 }
 
-type JsonSchemaCommon struct {
-	Id          o.Option[string]                `json:"$id" yaml:"$id"`
-	Type        o.Option[schematype.SchemaType] `json:"type" yaml:"type"`
-	Ref         o.Option[string]                `json:"$ref" yaml:"$ref"`
-	Schema      o.Option[string]                `json:"$schema" yaml:"$schema"`
-	Comment     o.Option[string]                `json:"$comment" yaml:"$comment"`
-	Deprecated  o.Option[bool]                  `json:"deprecated" yaml:"deprecated"`
-	Description o.Option[string]                `json:"description" yaml:"description"`
-	Title       o.Option[string]                `json:"title" yaml:"title"`
-	ReadOnly    o.Option[bool]                  `json:"readOnly" yaml:"readOnly"`
-	WriteOnly   o.Option[bool]                  `json:"writeOnly" yaml:"writeOnly"`
+type jsonSchemaDescriminator struct {
+	Id         o.Option[IdT]                   `json:"$id" yaml:"$id"`
+	Type       o.Option[schematype.SchemaType] `json:"type" yaml:"type"`
+	Ref        o.Option[string]                `json:"$ref" yaml:"$ref"`
+	Items      json.RawMessage                 `json:"items" yaml:"items"`
+	Properties map[string]json.RawMessage      `json:"properties" yaml:"properties"`
 }
 
-func (t JsonSchemaCommon) GetType() o.Option[schematype.SchemaType] {
-	return t.Type
-}
+func mergeDescription(a, b o.Option[DescriptionT]) o.Option[DescriptionT] {
+	var d string
 
-func (t JsonSchemaCommon) GetRef() o.Option[string] {
-	return t.Ref
-}
-
-func (t JsonSchemaCommon) GetId() o.Option[string] {
-	return t.Id
-}
-
-func (t JsonSchemaCommon) Copy() JsonSchema {
-	return JsonSchemaCommon{
-		Id:          t.Id,
-		Type:        t.Type,
-		Ref:         t.Ref,
-		Schema:      t.Schema,
-		Comment:     t.Comment,
-		Deprecated:  t.Deprecated,
-		Description: t.Description,
-		Title:       t.Title,
-		ReadOnly:    t.ReadOnly,
-		WriteOnly:   t.WriteOnly,
-	}
-}
-
-func (t JsonSchemaCommon) Merge(other JsonSchema) JsonSchema {
-	copy := t.Copy().(JsonSchemaCommon)
-	internal := other.Copy().(JsonSchemaCommon)
-
-	if internal.Title.Defined() {
-		copy.Title = internal.Title
+	if a.Defined() && b.Defined() {
+		d = fmt.Sprintf("%v\n%v", b.Get(), a.Get())
 	}
 
-	if internal.Description.Defined() {
-		if t.Description.Defined() {
-			copy.Description = o.Some(fmt.Sprintf("%v\n%v",
-				internal.Description.Get(),
-				t.Description.Get(),
-			))
-		} else {
-			copy.Description = internal.Description
-		}
+	if b.Defined() {
+		d = string(b.Get())
 	}
 
-	return copy
+	return o.OfZ(DescriptionT(d))
+}
+
+func mergeTitle(a, b o.Option[TitleT], id o.Option[IdT]) o.Option[TitleT] {
+	return o.FirstOf(b, a, func() o.Option[TitleT] {
+		var n string
+		n = pather.Base(id.Get())
+		n = caser.KebabToPascal(n)
+		return o.OfZ(TitleT(n))
+	}())
 }

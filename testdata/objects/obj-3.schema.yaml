@@ -6,6 +6,6 @@ properties:
     name:
         type: array
         items:
-            $ref: https://www.boundedinfinity.com/schema/test/string-plain
+            $ref: https://www.boundedinfinity.com/schema/test/string-single
 required:
     - name

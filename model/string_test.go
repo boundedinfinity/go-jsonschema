@@ -4,16 +4,19 @@ import (
 	"encoding/json"
 	"testing"
 
+	o "github.com/boundedinfinity/go-commoner/optioner"
 	"github.com/boundedinfinity/go-jsonschema/model"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v2"
 )
 
 var schema = "https://json-schema.org/draft/2020-12/schema"
-var id = "https://www.boundedinfinity.com/schema/string-1"
+var id model.IdT = "https://www.boundedinfinity.com/schema/string-1"
 
-func createString() model.JsonSchemaString {
-	return model.NewString(id)
+func createString() *model.JsonSchemaString {
+	schema := model.NewString()
+	schema.(*model.JsonSchemaString).Id = o.Some(id)
+	return schema.(*model.JsonSchemaString)
 }
 
 func Test_String_Unmarshal_Json(t *testing.T) {
@@ -57,7 +60,6 @@ func Test_String_Marshal(t *testing.T) {
 	actual, err := json.Marshal(input)
 	expected := `{
 		"$id":"https://www.boundedinfinity.com/schema/string-1",
-		"$ref":null, 
 		"$schema":"https://json-schema.org/draft/2020-12/schema",
 		"type":"string",
 		"$comment":null,

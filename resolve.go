@@ -1,28 +1,19 @@
 package jsonschema
 
 import (
+	o "github.com/boundedinfinity/go-commoner/optioner"
 	"github.com/boundedinfinity/go-jsonschema/model"
 )
 
-func (t *System) Resolve() error {
-	for k, v := range t.schemaMap {
-		if v.GetType().Empty() && v.GetRef().Empty() {
-			return model.ErrSchemaTypeOrRefNotFound
-		}
-
-		if v.GetType().Defined() {
-			continue
-		}
-
-		ref := t.schemaMap.Get(v.GetRef().Get())
-
-		if ref.Empty() {
-			return model.ErrRefNotFoundv(v.GetRef().Get())
-		}
-
-		resolved := v.Merge(ref.Get())
-		t.schemaMap[k] = resolved
+func (t *System) Resolve(schema model.JsonSchema) o.Option[model.JsonSchema] {
+	if schema.IsConcrete() {
+		return o.Some(schema)
 	}
 
-	return nil
+	id := schema.GetId().Get()
+	return t.idMap.Get(id)
+}
+
+func (t *System) Get(id model.IdT) o.Option[model.JsonSchema] {
+	return t.idMap.Get(id)
 }

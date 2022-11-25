@@ -24,7 +24,6 @@ func GetTestDataPath(path string) string {
 	}
 
 	url = filepath.Join(url, "testdata", path)
-	url = fmt.Sprintf("file://%v", url)
 
 	return url
 }

@@ -4,6 +4,6 @@ description: Test object 2
 type: object
 properties:
     name:
-        $ref: https://www.boundedinfinity.com/schema/test/string-plain
+        $ref: https://www.boundedinfinity.com/schema/test/string-single
 required:
     - name

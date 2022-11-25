@@ -23,55 +23,58 @@ func Test_Load_string_single_duplicate(t *testing.T) {
 	err := sys.Load(path, path)
 
 	assert.NotNil(t, err)
-	assert.Contains(t, err.Error(), model.ErrSchemaIdDuplicate.Error())
+	assert.ErrorIs(t, err, model.ErrPathDuplicate)
 }
 
 func Test_Load_string_ref(t *testing.T) {
-	path1 := testdata.GetTestDataPath("strings/single.schema.yaml")
-	path2 := testdata.GetTestDataPath("strings/ref.schema.yaml")
 	sys := jsonschema.New()
-	err := sys.Load(path1, path2)
+	err := sys.Load(
+		testdata.GetTestDataPath("strings/single.schema.yaml"),
+		testdata.GetTestDataPath("strings/ref.schema.yaml"),
+		testdata.GetTestDataPath("strings/array.schema.yaml"),
+	)
 
-	assert.NotNil(t, err)
+	assert.Nil(t, err)
 
-	err = sys.Resolve()
-	assert.NotNil(t, err)
+	err = sys.Check()
+	assert.Nil(t, err)
 }
 
-// func Test_Load_string_plain(t *testing.T) {
-// 	path := getTestDataPath("strings/plain.schema.yaml")
-// 	sys := jsonschema.New()
-// 	err := sys.Load(path)
+func Test_Load_object_ref(t *testing.T) {
+	sys := jsonschema.New()
+	err := sys.Load(
+		testdata.GetTestDataPath("objects/obj-1.schema.yaml"),
+		testdata.GetTestDataPath("objects/obj-2.schema.yaml"),
+		testdata.GetTestDataPath("objects/obj-3.schema.yaml"),
+		testdata.GetTestDataPath("strings/single.schema.yaml"),
+	)
 
-// 	assert.Nil(t, err)
-// 	assert.Equal(t, 1, len(sys.SourceMap))
+	assert.Nil(t, err)
 
-// 	obj := sys.ById("https://www.boundedinfinity.com/schema/test/string-plain")
+	err = sys.Check()
+	assert.Nil(t, err)
+}
 
-// 	assert.True(t, obj.Defined())
+func Test_Load_object_bad_ref(t *testing.T) {
+	sys := jsonschema.New()
+	err := sys.Load(
+		testdata.GetTestDataPath("objects/obj-3.schema.yaml"),
+	)
 
-// 	assert.Equal(t, "https://www.boundedinfinity.com/schema/test/string-plain", obj.Get().Id.Get())
-// 	assert.Equal(t, objecttype.String, obj.Get().Type.Get())
-// }
+	assert.Nil(t, err)
 
-// func Test_Load_string(t *testing.T) {
-// 	sys := jsonschema.New()
-// 	err := sys.Load(getTestDataPath("strings/single.schema.yaml"))
+	err = sys.Check()
+	assert.ErrorIs(t, err, model.ErrRefNotFound)
+}
 
-// 	assert.Nil(t, err)
-// 	assert.Equal(t, 1, len(sys.SourceMap))
+func Test_Load_resolve(t *testing.T) {
+	sys := jsonschema.New()
+	err := sys.Load(
+		testdata.GetTestDataPath("strings/ref.schema.yaml"),
+	)
 
-// 	sys.Clear()
-// 	err = sys.Load(getTestDataPath("strings/multi.schema.yaml"))
+	assert.Nil(t, err)
 
-// 	assert.Nil(t, err)
-// 	assert.Equal(t, 2, len(sys.SourceMap))
-// }
-
-// func Test_Load_bad_extention(t *testing.T) {
-// 	sys := jsonschema.New()
-// 	err := sys.Load(getTestDataPath("strings/normal.yaml"))
-
-// 	assert.NotNil(t, err)
-// 	assert.True(t, errors.Is(err, jsonschema.ErrUnsupportedFileType))
-// }
+	err = sys.Check()
+	assert.ErrorIs(t, err, model.ErrRefNotFound)
+}
