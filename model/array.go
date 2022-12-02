@@ -14,6 +14,8 @@ func NewArray() *JsonSchemaArray {
 	}
 }
 
+var _ = &JsonSchemaArray{}
+
 type JsonSchemaArray struct {
 	Id          o.Option[IdT]                   `json:"$id" yaml:"$id"`
 	Type        o.Option[schematype.SchemaType] `json:"type" yaml:"type"`

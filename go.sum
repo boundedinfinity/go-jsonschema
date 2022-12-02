@@ -1,5 +1,7 @@
-github.com/boundedinfinity/mimetyper v1.0.10 h1:Voq5q8n9MpDg/8Aol/yKX5V/Fv7Vg9OjPaNigZwDs0U=
-github.com/boundedinfinity/mimetyper v1.0.10/go.mod h1:UODJ2UOu48HIzyn+GfBBNorudvd5ixI+mJOYlcPKyQk=
+github.com/boundedinfinity/go-marshaler v1.0.5 h1:W+McXm0N+Z5CqxAZeu+VlgUqp+7bZ9nB1MSagbwnXc0=
+github.com/boundedinfinity/go-marshaler v1.0.5/go.mod h1:VR42tLyEtyYcVat+HURTvw3fXRaRgcay+WcU90A2I8g=
+github.com/boundedinfinity/go-mimetyper v1.0.13 h1:o3WwNU4hUc3uZ96I2nzgjbi4KMBnlAmxTn4HqQe4YJY=
+github.com/boundedinfinity/go-mimetyper v1.0.13/go.mod h1:ZkUhqDBjrxXx2EVNAwKWucHG3dTq7arPMBXAgaBUfns=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

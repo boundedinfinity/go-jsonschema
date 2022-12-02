@@ -33,6 +33,8 @@ type JsonSchemaObject struct {
 	MinProperties o.Option[int64]                   `json:"minProperties" yaml:"minProperties"`
 }
 
+var _ = &JsonSchemaObject{}
+
 func (t JsonSchemaObject) GetId() o.Option[IdT] {
 	return t.Id
 }

@@ -20,6 +20,8 @@ type JsonSchemaRef struct {
 	Description o.Option[DescriptionT] `json:"description" yaml:"description"`
 }
 
+var _ = &JsonSchemaRef{}
+
 func (t JsonSchemaRef) GetId() o.Option[IdT] {
 	return t.Id
 }

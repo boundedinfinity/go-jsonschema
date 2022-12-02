@@ -31,6 +31,8 @@ type JsonSchemaInteger struct {
 	MultipleOf       o.Option[int64]                 `json:"multipleOf" yaml:"multipleOf"`
 }
 
+var _ = &JsonSchemaInteger{}
+
 func (t JsonSchemaInteger) GetId() o.Option[IdT] {
 	return t.Id
 }

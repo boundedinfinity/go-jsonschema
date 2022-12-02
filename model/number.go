@@ -31,6 +31,8 @@ type JsonSchemaNumber struct {
 	MultipleOf       o.Option[float64]               `json:"multipleOf" yaml:"multipleOf"`
 }
 
+var _ = &JsonSchemaNumber{}
+
 func (t JsonSchemaNumber) GetId() o.Option[IdT] {
 	return t.Id
 }

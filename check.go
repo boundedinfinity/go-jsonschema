@@ -3,22 +3,6 @@ package jsonschema
 import "github.com/boundedinfinity/go-jsonschema/model"
 
 func (t *System) Check() error {
-	if err := t.check1(); err != nil {
-		return err
-	}
-
-	if err := t.check3(); err != nil {
-		return err
-	}
-
-	if err := t.check2(); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (t *System) check1() error {
 	for _, schema := range t.pathMap {
 		id := schema.GetId()
 
@@ -33,10 +17,12 @@ func (t *System) check1() error {
 		t.idMap[id.Get()] = schema
 	}
 
-	return nil
-}
+	for _, schema := range t.idMap {
+		if err := schema.Validate(); err != nil {
+			return err
+		}
+	}
 
-func (t *System) check2() error {
 	for _, schema := range t.idMap {
 		if err := t.checkResolve(schema); err != nil {
 			return err
@@ -91,16 +77,6 @@ func (t *System) checkResolve(schema model.JsonSchema) error {
 			if err := t.checkResolve(property); err != nil {
 				return err
 			}
-		}
-	}
-
-	return nil
-}
-
-func (t *System) check3() error {
-	for _, schema := range t.idMap {
-		if err := schema.Validate(); err != nil {
-			return err
 		}
 	}
 

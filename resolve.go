@@ -13,7 +13,3 @@ func (t *System) Resolve(schema model.JsonSchema) o.Option[model.JsonSchema] {
 	id := schema.GetId().Get()
 	return t.idMap.Get(id)
 }
-
-func (t *System) Get(id model.IdT) o.Option[model.JsonSchema] {
-	return t.idMap.Get(id)
-}

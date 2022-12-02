@@ -7,6 +7,9 @@ import (
 	"github.com/boundedinfinity/go-jsonschema/schematype"
 )
 
+// Reference
+// https://medium.com/@nate510/dynamic-json-umarshalling-in-go-88095561d6a0
+
 func UnmarshalSchema(data []byte) (JsonSchema, error) {
 	var out JsonSchema
 	var d jsonSchemaDescriminator

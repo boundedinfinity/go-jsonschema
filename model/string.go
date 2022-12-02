@@ -34,6 +34,8 @@ type JsonSchemaString struct {
 	EnumDescription o.Option[mapper.Mapper[EnumT, EnumDescriptionT]] `json:"enum-description,omitempty" yaml:"enum-description,omitempty"`
 }
 
+var _ = &JsonSchemaString{}
+
 func (t JsonSchemaString) GetId() o.Option[IdT] {
 	return t.Id
 }

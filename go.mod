@@ -4,8 +4,8 @@ go 1.18
 
 require (
 	github.com/boundedinfinity/go-commoner v1.0.17
-	github.com/boundedinfinity/go-marshaler v1.0.3
-	github.com/boundedinfinity/mimetyper v1.0.10
+	github.com/boundedinfinity/go-marshaler v1.0.5
+	github.com/boundedinfinity/go-mimetyper v1.0.13
 	github.com/ghodss/yaml v1.0.0
 	github.com/stretchr/testify v1.8.0
 	gopkg.in/yaml.v2 v2.4.0
@@ -18,5 +18,3 @@ require (
 )
 
 replace github.com/boundedinfinity/go-commoner => ../go-commoner
-
-replace github.com/boundedinfinity/go-marshaler => ../go-marshaler
