@@ -19,13 +19,13 @@ func NewObject() *JsonSchemaObject {
 }
 
 type JsonSchemaObject struct {
-	Id            o.Option[IdT]                     `json:"$id" yaml:"$id"`
+	Id            o.Option[string]                  `json:"$id" yaml:"$id"`
 	Type          o.Option[schematype.SchemaType]   `json:"type" yaml:"type"`
-	Schema        o.Option[SchemaT]                 `json:"$schema" yaml:"$schema"`
-	Comment       o.Option[CommentT]                `json:"$comment" yaml:"$comment"`
+	Schema        o.Option[string]                  `json:"$schema" yaml:"$schema"`
+	Comment       o.Option[string]                  `json:"$comment" yaml:"$comment"`
 	Deprecated    o.Option[bool]                    `json:"deprecated" yaml:"deprecated"`
-	Description   o.Option[DescriptionT]            `json:"description" yaml:"description"`
-	Title         o.Option[TitleT]                  `json:"title" yaml:"title"`
+	Description   o.Option[string]                  `json:"description" yaml:"description"`
+	Title         o.Option[string]                  `json:"title" yaml:"title"`
 	ReadOnly      o.Option[bool]                    `json:"readOnly" yaml:"readOnly"`
 	WriteOnly     o.Option[bool]                    `json:"writeOnly" yaml:"writeOnly"`
 	Properties    mapper.Mapper[string, JsonSchema] `json:"properties" yaml:"properties"`
@@ -35,12 +35,12 @@ type JsonSchemaObject struct {
 
 var _ = &JsonSchemaObject{}
 
-func (t JsonSchemaObject) GetId() o.Option[IdT] {
+func (t JsonSchemaObject) GetId() o.Option[string] {
 	return t.Id
 }
 
-func (t JsonSchemaObject) GetRef() o.Option[IdT] {
-	return o.None[IdT]()
+func (t JsonSchemaObject) GetRef() o.Option[string] {
+	return o.None[string]()
 }
 
 func (t JsonSchemaObject) IsConcrete() bool {
@@ -70,13 +70,13 @@ func (t JsonSchemaObject) Validate() error {
 }
 
 type jsonSchemaObject struct {
-	Id            o.Option[IdT]                          `json:"$id" yaml:"$id"`
+	Id            o.Option[string]                       `json:"$id" yaml:"$id"`
 	Type          o.Option[schematype.SchemaType]        `json:"type" yaml:"type"`
-	Schema        o.Option[SchemaT]                      `json:"$schema" yaml:"$schema"`
-	Comment       o.Option[CommentT]                     `json:"$comment" yaml:"$comment"`
+	Schema        o.Option[string]                       `json:"$schema" yaml:"$schema"`
+	Comment       o.Option[string]                       `json:"$comment" yaml:"$comment"`
 	Deprecated    o.Option[bool]                         `json:"deprecated" yaml:"deprecated"`
-	Description   o.Option[DescriptionT]                 `json:"description" yaml:"description"`
-	Title         o.Option[TitleT]                       `json:"title" yaml:"title"`
+	Description   o.Option[string]                       `json:"description" yaml:"description"`
+	Title         o.Option[string]                       `json:"title" yaml:"title"`
 	ReadOnly      o.Option[bool]                         `json:"readOnly" yaml:"readOnly"`
 	WriteOnly     o.Option[bool]                         `json:"writeOnly" yaml:"writeOnly"`
 	Properties    mapper.Mapper[string, json.RawMessage] `json:"properties" yaml:"properties"`

@@ -11,7 +11,7 @@ import (
 )
 
 var schema = "https://json-schema.org/draft/2020-12/schema"
-var id model.IdT = "https://www.boundedinfinity.com/schema/string-1"
+var id = "https://www.boundedinfinity.com/schema/string-1"
 
 func createString() *model.JsonSchemaString {
 	schema := model.NewString()

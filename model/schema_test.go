@@ -16,7 +16,7 @@ func Test_Unmarshal_String(t *testing.T) {
 				"$schema":"https://json-schema.org/draft/2020-12/schema"
 			}`
 	expected := &model.JsonSchemaString{
-		Id:   o.Some(model.IdT("some-id")),
+		Id:   o.Some("some-id"),
 		Type: o.Some(schematype.String),
 	}
 
@@ -44,7 +44,7 @@ func Test_Unmarshal_Array(t *testing.T) {
 			}`
 
 	expected := model.NewArray()
-	expected.Id = o.Some(model.IdT("some-id"))
+	expected.Id = o.Some("some-id")
 	expected.Items = o.Some(model.NewString())
 
 	actual, err := model.UnmarshalSchema([]byte(input))
@@ -73,7 +73,7 @@ func Test_Unmarshal_Object(t *testing.T) {
 			}`
 
 	expected := model.NewObject()
-	expected.Id = o.Some(model.IdT("some-id"))
+	expected.Id = o.Some("some-id")
 	expected.Properties["a"] = model.NewString()
 	expected.Properties["b"] = model.NewInteger()
 

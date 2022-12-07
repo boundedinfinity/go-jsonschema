@@ -6,16 +6,20 @@ import (
 	"github.com/boundedinfinity/go-jsonschema/schematype"
 )
 
-func (t *System) Id(schema model.JsonSchema) o.Option[model.IdT] {
+func (t *System) All() []model.JsonSchema {
+	return t.idMap.Values().Get()
+}
+
+func (t *System) Id(schema model.JsonSchema) o.Option[string] {
 	if schema == nil {
-		return o.None[model.IdT]()
+		return o.None[string]()
 	}
 
 	switch c := schema.(type) {
 	case model.JsonSchemaArray:
-		return c.Id
+		return t.Id(c.Items.Get())
 	case *model.JsonSchemaArray:
-		return c.Id
+		return t.Id(c.Items.Get())
 	case model.JsonSchemaInteger:
 		return c.Id
 	case *model.JsonSchemaInteger:
@@ -39,13 +43,13 @@ func (t *System) Id(schema model.JsonSchema) o.Option[model.IdT] {
 	case *model.JsonSchemaNull:
 		return c.Id
 	default:
-		return o.None[model.IdT]()
+		return o.None[string]()
 	}
 }
 
-func (t *System) Ref(schema model.JsonSchema) o.Option[model.IdT] {
+func (t *System) Ref(schema model.JsonSchema) o.Option[string] {
 	if schema == nil {
-		return o.None[model.IdT]()
+		return o.None[string]()
 	}
 
 	switch c := schema.(type) {
@@ -54,7 +58,7 @@ func (t *System) Ref(schema model.JsonSchema) o.Option[model.IdT] {
 	case *model.JsonSchemaRef:
 		return c.Ref
 	default:
-		return o.None[model.IdT]()
+		return o.None[string]()
 	}
 }
 
@@ -63,8 +67,8 @@ func (t *System) Get(v string) o.Option[model.JsonSchema] {
 		return t.pathMap.Get(v)
 	}
 
-	if t.idMap.Has(model.IdT(v)) {
-		return t.idMap.Get(model.IdT(v))
+	if t.idMap.Has(v) {
+		return t.idMap.Get(v)
 	}
 
 	return o.None[model.JsonSchema]()

@@ -14,10 +14,10 @@ func New() *System {
 
 type System struct {
 	pathMap mapper.Mapper[string, model.JsonSchema]
-	idMap   mapper.Mapper[model.IdT, model.JsonSchema]
+	idMap   mapper.Mapper[string, model.JsonSchema]
 }
 
 func (t *System) Clear() {
 	t.pathMap = make(mapper.Mapper[string, model.JsonSchema])
-	t.idMap = make(mapper.Mapper[model.IdT, model.JsonSchema])
+	t.idMap = make(mapper.Mapper[string, model.JsonSchema])
 }
