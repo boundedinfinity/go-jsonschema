@@ -6,8 +6,12 @@ import (
 	"github.com/boundedinfinity/go-jsonschema/schematype"
 )
 
-func (t *System) All() []model.JsonSchema {
+func (t *System) AllId() []model.JsonSchema {
 	return t.idMap.Values().Get()
+}
+
+func (t *System) AllPath() []model.JsonSchema {
+	return t.pathMap.Values().Get()
 }
 
 func (t *System) Id(schema model.JsonSchema) o.Option[string] {
