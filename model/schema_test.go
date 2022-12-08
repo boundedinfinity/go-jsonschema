@@ -16,8 +16,10 @@ func Test_Unmarshal_String(t *testing.T) {
 				"$schema":"https://json-schema.org/draft/2020-12/schema"
 			}`
 	expected := &model.JsonSchemaString{
-		Id:   o.Some("some-id"),
-		Type: o.Some(schematype.String),
+		JsonSchemaBase: model.JsonSchemaBase{
+			Id:   o.Some("some-id"),
+			Type: o.Some(schematype.String),
+		},
 	}
 
 	actual, err := model.UnmarshalSchema([]byte(input))

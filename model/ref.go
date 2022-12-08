@@ -13,11 +13,8 @@ func NewRef(ref string) *JsonSchemaRef {
 }
 
 type JsonSchemaRef struct {
-	Id          o.Option[string] `json:"$id" yaml:"$id"`
-	Ref         o.Option[string] `json:"$ref" yaml:"$ref"`
-	Schema      o.Option[string] `json:"$schema" yaml:"$schema"`
-	Title       o.Option[string] `json:"title" yaml:"title"`
-	Description o.Option[string] `json:"description" yaml:"description"`
+	JsonSchemaBase
+	Ref o.Option[string] `json:"$ref" yaml:"$ref"`
 }
 
 var _ = &JsonSchemaRef{}

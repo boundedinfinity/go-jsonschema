@@ -9,23 +9,17 @@ import (
 
 func NewString() JsonSchema {
 	schema := &JsonSchemaString{
-		Schema: o.Some(SCHEMA_VERSION_2020_12),
-		Type:   o.Some(schematype.String),
+		JsonSchemaBase: JsonSchemaBase{
+			Schema: o.Some(SCHEMA_VERSION_2020_12),
+			Type:   o.Some(schematype.String),
+		},
 	}
 
 	return schema
 }
 
 type JsonSchemaString struct {
-	Id              o.Option[string]                        `json:"$id" yaml:"$id"`
-	Type            o.Option[schematype.SchemaType]         `json:"type" yaml:"type"`
-	Schema          o.Option[string]                        `json:"$schema" yaml:"$schema"`
-	Comment         o.Option[string]                        `json:"$comment" yaml:"$comment"`
-	Deprecated      o.Option[bool]                          `json:"deprecated" yaml:"deprecated"`
-	Description     o.Option[string]                        `json:"description" yaml:"description"`
-	Title           o.Option[string]                        `json:"title" yaml:"title"`
-	ReadOnly        o.Option[bool]                          `json:"readOnly" yaml:"readOnly"`
-	WriteOnly       o.Option[bool]                          `json:"writeOnly" yaml:"writeOnly"`
+	JsonSchemaBase
 	Format          o.Option[stringformat.StringFormat]     `json:"format,omitempty" yaml:"format,omitempty"`
 	MaxLength       o.Option[int]                           `json:"maxLength,omitempty" yaml:"maxLength,omitempty"`
 	MinLength       o.Option[int]                           `json:"minLength,omitempty" yaml:"minLength,omitempty"`
