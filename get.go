@@ -63,15 +63,7 @@ func (t *System) Ref(schema model.JsonSchema) o.Option[string] {
 }
 
 func (t *System) Get(v string) o.Option[model.JsonSchema] {
-	if t.pathMap.Has(v) {
-		return t.pathMap.Get(v)
-	}
-
-	if t.idMap.Has(v) {
-		return t.idMap.Get(v)
-	}
-
-	return o.None[model.JsonSchema]()
+	return o.FirstOf(t.idMap.Get(v), t.pathMap.Get(v))
 }
 
 func (t *System) GetType(schema model.JsonSchema) o.Option[schematype.SchemaType] {

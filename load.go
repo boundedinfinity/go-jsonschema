@@ -60,7 +60,9 @@ func (t *System) LoadSchema(data []byte, mt mime_type.MimeType, path string) err
 		return err
 	}
 
-	t.pathMap[path] = schema
+	if err := t.Register(schema); err != nil {
+		return err
+	}
 
 	return nil
 }
