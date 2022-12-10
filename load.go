@@ -1,6 +1,7 @@
 package jsonschema
 
 import (
+	"github.com/boundedinfinity/go-commoner/optioner"
 	"github.com/boundedinfinity/go-jsonschema/model"
 	"github.com/boundedinfinity/go-marshaler"
 	"github.com/boundedinfinity/go-mimetyper/mime_type"
@@ -60,7 +61,7 @@ func (t *System) LoadSchema(data []byte, mt mime_type.MimeType, path string) err
 		return err
 	}
 
-	if err := t.Register(schema); err != nil {
+	if err := t.Register(schema, optioner.Some(path)); err != nil {
 		return err
 	}
 

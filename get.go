@@ -66,8 +66,18 @@ func (t *System) Ref(schema model.JsonSchema) o.Option[string] {
 	}
 }
 
-func (t *System) Get(v string) o.Option[model.JsonSchema] {
-	return o.FirstOf(t.idMap.Get(v), t.pathMap.Get(v))
+func (t *System) Get(id string) o.Option[model.JsonSchema] {
+	return o.FirstOf(t.idMap.Get(id), t.pathMap.Get(id))
+}
+
+func (t *System) GetSource(id string) o.Option[string] {
+	s := t.Get(id)
+
+	if s.Empty() || s.Get().GetId().Empty() {
+		return o.None[string]()
+	}
+
+	return t.id2path.Get(s.Get().GetId().Get())
 }
 
 func (t *System) GetType(schema model.JsonSchema) o.Option[schematype.SchemaType] {
