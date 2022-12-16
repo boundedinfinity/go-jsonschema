@@ -6,10 +6,24 @@ import (
 )
 
 func (t *System) Resolve(schema model.JsonSchema) o.Option[model.JsonSchema] {
-	if schema.IsConcrete() {
+	switch schema.(type) {
+	case model.JsonSchemaRef:
+		return t.id2schema.Get(schema.Base().Id.Get())
+	case *model.JsonSchemaRef:
+		return t.id2schema.Get(schema.Base().Id.Get())
+	default:
 		return o.Some(schema)
 	}
+}
 
-	id := schema.GetId().Get()
-	return t.idMap.Get(id)
+func (t *System) Validate() error {
+	for _, schema := range t.All {
+		resolved := t.Resolve(schema)
+
+		if resolved.Empty() {
+			model.ErrSchemaCantResolvev(schema.Base().Id)
+		}
+	}
+
+	return nil
 }

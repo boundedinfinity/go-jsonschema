@@ -1,7 +1,6 @@
 package jsonschema
 
 import (
-	"github.com/boundedinfinity/go-commoner/optioner"
 	"github.com/boundedinfinity/go-jsonschema/model"
 	"github.com/boundedinfinity/go-marshaler"
 	"github.com/boundedinfinity/go-mimetyper/mime_type"
@@ -25,12 +24,12 @@ func (t *System) loadPath(root string) error {
 		return err
 	}
 
-	for path, content := range m {
-		if t.pathMap.Has(path) {
-			return model.ErrPathDuplicatev(path)
+	for source, content := range m {
+		if t.source2schema.Has(source) {
+			return model.ErrPathDuplicatev(source)
 		}
 
-		if err := t.LoadSchema(content.Data, content.MimeType, path); err != nil {
+		if err := t.LoadSchema(root, source, content.Data, content.MimeType); err != nil {
 			return err
 		}
 	}
@@ -38,7 +37,7 @@ func (t *System) loadPath(root string) error {
 	return nil
 }
 
-func (t *System) LoadSchema(data []byte, mt mime_type.MimeType, path string) error {
+func (t *System) LoadSchema(root, source string, data []byte, mt mime_type.MimeType) error {
 	var bs []byte
 	var err error
 
@@ -61,7 +60,7 @@ func (t *System) LoadSchema(data []byte, mt mime_type.MimeType, path string) err
 		return err
 	}
 
-	if err := t.Register(schema, optioner.Some(path)); err != nil {
+	if err := t.Register(root, source, schema); err != nil {
 		return err
 	}
 

@@ -7,11 +7,11 @@ import (
 )
 
 func (t *System) AllId() []model.JsonSchema {
-	return t.idMap.Values().Get()
+	return t.id2schema.Values().Get()
 }
 
 func (t *System) AllPath() []model.JsonSchema {
-	return t.pathMap.Values().Get()
+	return t.source2schema.Values().Get()
 }
 
 func (t *System) Id(schema model.JsonSchema) o.Option[string] {
@@ -67,17 +67,17 @@ func (t *System) Ref(schema model.JsonSchema) o.Option[string] {
 }
 
 func (t *System) Get(id string) o.Option[model.JsonSchema] {
-	return o.FirstOf(t.idMap.Get(id), t.pathMap.Get(id))
+	return o.FirstOf(t.id2schema.Get(id), t.source2schema.Get(id))
 }
 
 func (t *System) GetSource(id string) o.Option[string] {
 	s := t.Get(id)
 
-	if s.Empty() || s.Get().GetId().Empty() {
+	if s.Empty() || s.Get().Base().Id.Empty() {
 		return o.None[string]()
 	}
 
-	return t.id2path.Get(s.Get().GetId().Get())
+	return t.id2source.Get(s.Get().Base().Id.Get())
 }
 
 func (t *System) GetType(schema model.JsonSchema) o.Option[schematype.SchemaType] {

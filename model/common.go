@@ -11,10 +11,7 @@ import (
 )
 
 type JsonSchema interface {
-	GetId() o.Option[string]
-	GetRef() o.Option[string]
-	IsConcrete() bool
-	IsRef() bool
+	Base() *JsonSchemaBase
 	Validate() error
 }
 
@@ -28,6 +25,10 @@ type JsonSchemaBase struct {
 	Title       o.Option[string]                `json:"title" yaml:"title"`
 	ReadOnly    o.Option[bool]                  `json:"readOnly" yaml:"readOnly"`
 	WriteOnly   o.Option[bool]                  `json:"writeOnly" yaml:"writeOnly"`
+}
+
+func (t JsonSchemaBase) Base() *JsonSchemaBase {
+	return &t
 }
 
 type jsonSchemaDescriminator struct {

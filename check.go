@@ -3,27 +3,27 @@ package jsonschema
 import "github.com/boundedinfinity/go-jsonschema/model"
 
 func (t *System) Check() error {
-	for _, schema := range t.pathMap {
-		id := schema.GetId()
+	for _, schema := range t.source2schema {
+		id := schema.Base().Id
 
 		if id.Empty() {
 			return model.ErrSchemaIdNotFound
 		}
 
-		if t.idMap.Has(id.Get()) {
+		if t.id2schema.Has(id.Get()) {
 			return model.ErrSchemaIdDuplicatev(id.Get())
 		}
 
-		t.idMap[id.Get()] = schema
+		t.id2schema[id.Get()] = schema
 	}
 
-	for _, schema := range t.idMap {
+	for _, schema := range t.id2schema {
 		if err := schema.Validate(); err != nil {
 			return err
 		}
 	}
 
-	for _, schema := range t.idMap {
+	for _, schema := range t.id2schema {
 		if err := t.checkResolve(schema); err != nil {
 			return err
 		}
@@ -39,7 +39,7 @@ func (t *System) checkResolve(schema model.JsonSchema) error {
 			return model.ErrRefEmpty
 		}
 
-		if t.idMap.Get(c.Ref.Get()).Empty() {
+		if t.id2schema.Get(c.Ref.Get()).Empty() {
 			return model.ErrRefNotFoundv(c.Ref.Get())
 		}
 	case model.JsonSchemaRef:
@@ -47,7 +47,7 @@ func (t *System) checkResolve(schema model.JsonSchema) error {
 			return model.ErrRefEmpty
 		}
 
-		if t.idMap.Get(c.Ref.Get()).Empty() {
+		if t.id2schema.Get(c.Ref.Get()).Empty() {
 			return model.ErrRefNotFoundv(c.Ref.Get())
 		}
 	case *model.JsonSchemaArray:
