@@ -15,40 +15,11 @@ func (t *System) AllPath() []model.JsonSchema {
 }
 
 func (t *System) Id(schema model.JsonSchema) o.Option[string] {
-	if schema == nil {
+	if schema == nil || schema.Base() == nil {
 		return o.None[string]()
 	}
 
-	switch c := schema.(type) {
-	case model.JsonSchemaArray:
-		return t.Id(c.Items.Get())
-	case *model.JsonSchemaArray:
-		return t.Id(c.Items.Get())
-	case model.JsonSchemaInteger:
-		return c.Id
-	case *model.JsonSchemaInteger:
-		return c.Id
-	case model.JsonSchemaNumber:
-		return c.Id
-	case *model.JsonSchemaNumber:
-		return c.Id
-	case model.JsonSchemaObject:
-		return c.Id
-	case *model.JsonSchemaObject:
-		return c.Id
-	case model.JsonSchemaString:
-		return c.Id
-	case *model.JsonSchemaString:
-		return c.Id
-	case model.JsonSchemaBoolean:
-		return c.Id
-	case model.JsonSchemaNull:
-		return c.Id
-	case *model.JsonSchemaNull:
-		return c.Id
-	default:
-		return o.None[string]()
-	}
+	return schema.Base().Id
 }
 
 func (t *System) Ref(schema model.JsonSchema) o.Option[string] {
@@ -78,6 +49,16 @@ func (t *System) GetSource(id string) o.Option[string] {
 	}
 
 	return t.id2source.Get(s.Get().Base().Id.Get())
+}
+
+func (t *System) GetRoot(id string) o.Option[string] {
+	s := t.Get(id)
+
+	if s.Empty() || s.Get().Base().Id.Empty() {
+		return o.None[string]()
+	}
+
+	return t.id2root.Get(s.Get().Base().Id.Get())
 }
 
 func (t *System) GetType(schema model.JsonSchema) o.Option[schematype.SchemaType] {
