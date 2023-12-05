@@ -1,1 +1,0 @@
-package stringformat_test

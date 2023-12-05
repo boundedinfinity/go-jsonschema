@@ -1,0 +1,22 @@
+serialize:
+    value: pascal-to-kebab
+values:
+    -   name: DateTime
+    -   name: Time
+    -   name: Date
+    -   name: Duration
+    -   name: Email
+    -   name: IdnEmail
+    -   name: Hostname
+    -   name: IdnHostname
+    -   name: Ipv4
+    -   name: Ipv6
+    -   name: Uuid
+    -   name: Uri
+    -   name: UriReference
+    -   name: UriTemplate
+    -   name: Iri
+    -   name: IriReference
+    -   name: JsonPointer
+    -   name: RelativeJsonPointer
+    -   name: Regex
