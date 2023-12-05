@@ -33,6 +33,17 @@ func (t JsonSchemaInteger) TypeName() string {
 	return "integer"
 }
 
+func (t JsonSchemaInteger) Copy() JsonSchema {
+	return &JsonSchemaInteger{
+		JsonSchemaCommon: t.Common().Copy(),
+		ExclusiveMaximum: t.ExclusiveMaximum,
+		ExclusiveMinimum: t.ExclusiveMinimum,
+		Maximum:          t.Maximum,
+		Minimum:          t.Minimum,
+		MultipleOf:       t.MultipleOf,
+	}
+}
+
 func (t *JsonSchemaInteger) Common() *JsonSchemaCommon {
 	return &t.JsonSchemaCommon
 }

@@ -28,6 +28,13 @@ func (t *JsonSchemaRef) Common() *JsonSchemaCommon {
 	return &t.JsonSchemaCommon
 }
 
+func (t JsonSchemaRef) Copy() JsonSchema {
+	return &JsonSchemaRef{
+		JsonSchemaCommon: t.Common().Copy(),
+		Schema:           t.Copy(),
+	}
+}
+
 func (t JsonSchemaRef) Validate() error {
 	if err := t.Common().Validate(); err != nil {
 		return nil

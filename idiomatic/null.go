@@ -27,6 +27,12 @@ func (t *JsonSchemaNull) Common() *JsonSchemaCommon {
 	return &t.JsonSchemaCommon
 }
 
+func (t JsonSchemaNull) Copy() JsonSchema {
+	return &JsonSchemaNull{
+		JsonSchemaCommon: t.Common().Copy(),
+	}
+}
+
 func (t JsonSchemaNull) Validate() error {
 	if err := t.Common().Validate(); err != nil {
 		return nil

@@ -30,13 +30,22 @@ func (t *JsonSchemaArray) Common() *JsonSchemaCommon {
 	return &t.JsonSchemaCommon
 }
 
+func (t JsonSchemaArray) Copy() JsonSchema {
+	return &JsonSchemaArray{
+		JsonSchemaCommon: t.Common().Copy(),
+		Items:            t.Copy(),
+		MinContains:      t.MinContains,
+		MaxContains:      t.MaxContains,
+	}
+}
+
 func (t JsonSchemaArray) Validate() error {
 	if err := t.Common().Validate(); err != nil {
 		return nil
 	}
 
 	if t.Items == nil {
-		return model.ErrArrayItemsEmpty
+		return model.ErrJsonSchemaArrayItemsEmpty
 	}
 
 	if err := t.Items.Validate(); err != nil {

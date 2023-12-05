@@ -1,14 +1,52 @@
 package idiomatic
 
-// import (
-// 	"encoding/json"
-// 	"fmt"
+import (
+	"errors"
+	"fmt"
 
-// 	"github.com/boundedinfinity/go-jsonschema/schematype"
-// )
+	"github.com/boundedinfinity/go-commoner/idiomatic/marshaler"
+)
 
-// // Reference
-// // https://medium.com/@nate510/dynamic-json-umarshalling-in-go-88095561d6a0
+func NewMarshaler() *JsonSchemaMarshaler {
+	m := &JsonSchemaMarshaler{
+		km: marshaler.NewKind(
+			jsonSchemaDescriminator{},
+			func(d jsonSchemaDescriminator) string {
+				return d.Type
+			},
+		),
+	}
+
+	return m
+}
+
+type JsonSchemaMarshaler struct {
+	km *marshaler.KindMarshaler[jsonSchemaDescriminator]
+}
+
+func (t JsonSchemaMarshaler) Unmarshal(data []byte) (JsonSchema, error) {
+	var val any
+	var err error
+
+	val, err = t.km.Unmarshal(data)
+
+	if err != nil && !errors.Is(err, marshaler.ErrKindMarshalerTypeNotRegistered) {
+		return nil, err
+	}
+
+	schema, ok := val.(JsonSchema)
+
+	if !ok {
+		return nil, fmt.Errorf("something")
+	}
+
+	switch val := schema.(type) {
+	case *JsonSchemaRef:
+
+	}
+
+	return nil, nil
+}
 
 // func UnmarshalSchema(data []byte) (JsonSchema, error) {
 // 	var out JsonSchema

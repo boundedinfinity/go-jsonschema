@@ -37,6 +37,17 @@ func (t *JsonSchemaNumber) Common() *JsonSchemaCommon {
 	return &t.JsonSchemaCommon
 }
 
+func (t JsonSchemaNumber) Copy() JsonSchema {
+	return &JsonSchemaNumber{
+		JsonSchemaCommon: t.Common().Copy(),
+		ExclusiveMaximum: t.ExclusiveMaximum,
+		ExclusiveMinimum: t.ExclusiveMinimum,
+		Maximum:          t.Maximum,
+		Minimum:          t.Minimum,
+		MultipleOf:       t.MultipleOf,
+	}
+}
+
 func (t JsonSchemaNumber) Validate() error {
 	if err := t.Common().Validate(); err != nil {
 		return nil

@@ -34,13 +34,28 @@ func (t *JsonSchemaObject) Common() *JsonSchemaCommon {
 	return &t.JsonSchemaCommon
 }
 
+func (t JsonSchemaObject) Copy() JsonSchema {
+	schema := &JsonSchemaObject{
+		JsonSchemaCommon: t.Common().Copy(),
+		MaxProperties:    t.MaxProperties,
+		MinProperties:    t.MinProperties,
+		Properties:       make(mapper.Mapper[string, JsonSchema]),
+	}
+
+	for name, property := range t.Properties {
+		schema.Properties[name] = property.Copy()
+	}
+
+	return schema
+}
+
 func (t JsonSchemaObject) Validate() error {
 	if err := validateMaxMinProperties(t.MaxProperties, t.MinProperties); err != nil {
 		return err
 	}
 
 	if t.Properties == nil {
-		return model.ErrObjectPropertiesMissing
+		return model.ErrJsonSchemaObjectPropertiesMissing
 	}
 
 	for _, property := range t.Properties {

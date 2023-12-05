@@ -3,13 +3,16 @@ package idiomatic
 import (
 	"fmt"
 
+	"github.com/boundedinfinity/go-commoner/idiomatic/marshaler"
 	"github.com/boundedinfinity/go-commoner/idiomatic/slicer"
 	"github.com/boundedinfinity/go-commoner/idiomatic/stringer"
 )
 
 type JsonSchema interface {
+	marshaler.TypeNamer
 	Common() *JsonSchemaCommon
 	Validate() error
+	Copy() JsonSchema
 }
 
 type jsonSchemaDescriminator struct {
@@ -29,6 +32,22 @@ type JsonSchemaCommon struct {
 	Deprecated  bool     `json:"deprecated" yaml:"deprecated"`
 	Examples    []string `json:"examples" yaml:"examples"`
 	Comment     string   `json:"$comment" yaml:"$comment"`
+}
+
+func (t JsonSchemaCommon) Copy() JsonSchemaCommon {
+	return JsonSchemaCommon{
+		Id:          t.Id,
+		Type:        t.Title,
+		Ref:         t.Ref,
+		Schema:      t.Schema,
+		Title:       t.Title,
+		Description: t.Description,
+		ReadOnly:    t.ReadOnly,
+		WriteOnly:   t.WriteOnly,
+		Deprecated:  t.Deprecated,
+		Examples:    t.Examples,
+		Comment:     t.Comment,
+	}
 }
 
 func (t *JsonSchemaCommon) Merge(other JsonSchemaCommon) {

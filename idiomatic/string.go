@@ -34,6 +34,17 @@ func (t *JsonSchemaString) Common() *JsonSchemaCommon {
 	return &t.JsonSchemaCommon
 }
 
+func (t JsonSchemaString) Copy() JsonSchema {
+	return &JsonSchemaString{
+		JsonSchemaCommon: t.Common().Copy(),
+		Format:           t.Format,
+		MaxLength:        t.MaxLength,
+		MinLength:        t.MinLength,
+		Pattern:          t.Pattern,
+		Enum:             append(t.Enum),
+	}
+}
+
 func (t *JsonSchemaString) Merge(other JsonSchemaString) {
 	t.Common().Merge(*other.Common())
 	t.Format = mergeSimple(other.Format, t.Format)
