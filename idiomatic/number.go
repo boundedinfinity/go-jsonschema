@@ -53,9 +53,9 @@ func (t JsonSchemaNumber) Validate() error {
 		return nil
 	}
 
-	if err := validateMultipleOf(t.MultipleOf); err != nil {
-		return err
-	}
+	// if err := validateMultipleOf(t.MultipleOf); err != nil {
+	// 	return err
+	// }
 
 	if err := validateMaxMin(t.Maximum, t.Minimum); err != nil {
 		return err

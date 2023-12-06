@@ -18,8 +18,8 @@ var _ JsonSchema = &JsonSchemaArray{}
 type JsonSchemaArray struct {
 	JsonSchemaCommon
 	Items       JsonSchema `json:"items" yaml:"items"`
-	MinContains int64      `json:"minContains" yaml:"minContains"`
-	MaxContains int64      `json:"manContains" yaml:"manContains"`
+	MinContains int        `json:"minContains" yaml:"minContains"`
+	MaxContains int        `json:"manContains" yaml:"manContains"`
 }
 
 func (t JsonSchemaArray) TypeName() string {

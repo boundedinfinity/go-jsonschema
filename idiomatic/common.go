@@ -15,11 +15,6 @@ type JsonSchema interface {
 	Copy() JsonSchema
 }
 
-type jsonSchemaDescriminator struct {
-	Type string `json:"type" yaml:"type"`
-	Ref  string `json:"$ref" yaml:"$ref"`
-}
-
 type JsonSchemaCommon struct {
 	Id          string   `json:"$id" yaml:"$id"`
 	Type        string   `json:"type" yaml:"type"`

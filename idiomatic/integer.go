@@ -2,11 +2,6 @@ package idiomatic
 
 import "github.com/boundedinfinity/go-jsonschema/model"
 
-// import (
-// 	o "github.com/boundedinfinity/go-commoner/optioner"
-// 	"github.com/boundedinfinity/go-jsonschema/schematype"
-// )
-
 func NewInteger() *JsonSchemaInteger {
 	schema := &JsonSchemaInteger{
 		JsonSchemaCommon: JsonSchemaCommon{
@@ -20,11 +15,11 @@ func NewInteger() *JsonSchemaInteger {
 
 type JsonSchemaInteger struct {
 	JsonSchemaCommon
-	ExclusiveMaximum float64 `json:"exclusiveMaximum" yaml:"exclusiveMaximum"`
-	ExclusiveMinimum float64 `json:"exclusiveMinimum" yaml:"exclusiveMinimum"`
-	Maximum          float64 `json:"maximum" yaml:"maximum"`
-	Minimum          float64 `json:"minimum" yaml:"minimum"`
-	MultipleOf       float64 `json:"multipleOf" yaml:"multipleOf"`
+	ExclusiveMaximum int `json:"exclusiveMaximum" yaml:"exclusiveMaximum"`
+	ExclusiveMinimum int `json:"exclusiveMinimum" yaml:"exclusiveMinimum"`
+	Maximum          int `json:"maximum" yaml:"maximum"`
+	Minimum          int `json:"minimum" yaml:"minimum"`
+	MultipleOf       int `json:"multipleOf" yaml:"multipleOf"`
 }
 
 var _ JsonSchema = &JsonSchemaInteger{}
@@ -53,7 +48,7 @@ func (t JsonSchemaInteger) Validate() error {
 		return nil
 	}
 
-	if err := validateMultipleOf(t.MultipleOf); err != nil {
+	if err := validateMultipleOf[int](t.MultipleOf); err != nil {
 		return err
 	}
 
