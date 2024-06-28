@@ -1,4 +1,4 @@
-package idiomatic
+package json_schema
 
 type jsonSchemaDescriminator struct {
 	Type string `json:"type" yaml:"type"`

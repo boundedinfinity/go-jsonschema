@@ -21,7 +21,7 @@ generate:
 test: generate
 	go test ./...
 
-commit:
+push:
 	git add . || true
 	git commit -m "$(m)" || true
 	git push origin master
@@ -30,7 +30,11 @@ tag:
 	git tag -a $(tag) -m "$(tag)"
 	git push origin $(tag)
 
-publish: generate
+tag-list:
+	git fetch --tags
+	git tag -l | sort -V
+
+publish: test
 	@if ack replace go.mod ;then echo 'Remove the "replace" line from the go.mod file'; exit 1; fi
-	make commit m=$(m)
+	make push m=$(m)
 	make tag tag=$(m)

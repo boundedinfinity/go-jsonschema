@@ -1,4 +1,4 @@
-package idiomatic
+package json_schema
 
 var _ JsonSchema = &JsonSchemaObject{}
 

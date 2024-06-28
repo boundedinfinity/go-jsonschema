@@ -1,4 +1,4 @@
-package idiomatic
+package json_schema
 
 // func NewRef(ref string) *JsonSchemaRef {
 // 	schema := &JsonSchemaRef{

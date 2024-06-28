@@ -1,16 +1,16 @@
-package idiomatic_test
+package json_schema_test
 
 import (
 	"encoding/json"
 	"testing"
 
-	"github.com/boundedinfinity/go-jsonschema/idiomatic"
+	"github.com/boundedinfinity/go-jsonschema/idiomatic/json_schema"
 	"github.com/stretchr/testify/assert"
 )
 
 var (
-	case1 = &idiomatic.JsonSchemaNumber{
-		JsonSchemaCore: idiomatic.JsonSchemaCore{
+	case1 = &json_schema.JsonSchemaNumber{
+		JsonSchemaCore: json_schema.JsonSchemaCore{
 			Id: "some-id",
 		},
 	}
@@ -19,7 +19,7 @@ var (
 func Test_Entity_Marshal_Json(t *testing.T) {
 	tcs := []struct {
 		name     string
-		input    idiomatic.JsonSchema
+		input    json_schema.JsonSchema
 		expected string
 		err      error
 	}{

@@ -1,4 +1,4 @@
-package idiomatic
+package json_schema
 
 // type JsonSchemaTypeMap struct {
 // 	m mapper.Mapper[string, JsonSchema]

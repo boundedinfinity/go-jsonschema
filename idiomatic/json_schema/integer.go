@@ -1,4 +1,4 @@
-package idiomatic
+package json_schema
 
 import (
 	"encoding/json"

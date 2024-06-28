@@ -1,4 +1,4 @@
-package idiomatic
+package json_schema
 
 import (
 	"github.com/boundedinfinity/go-commoner/errorer"

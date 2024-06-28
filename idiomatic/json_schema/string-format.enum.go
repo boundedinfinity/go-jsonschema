@@ -6,7 +6,7 @@
 //*                                                                                  *
 //************************************************************************************
 
-package idiomatic
+package json_schema
 
 import (
 	"database/sql/driver"
