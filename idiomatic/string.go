@@ -1,67 +1,58 @@
 package idiomatic
 
-import (
-	"github.com/boundedinfinity/go-jsonschema/model"
-)
+import "encoding/json"
 
-func NewString() JsonSchema {
-	schema := &JsonSchemaString{
-		JsonSchemaCommon: JsonSchemaCommon{
-			Schema: model.SCHEMA_VERSION_2020_12,
-			Type:   "string",
-		},
-	}
-
-	return schema
-}
-
-type JsonSchemaString struct {
-	JsonSchemaCommon
-	Format    StringFormat `json:"format,omitempty" yaml:"format,omitempty"`
-	MaxLength int64        `json:"maxLength,omitempty" yaml:"maxLength,omitempty"`
-	MinLength int64        `json:"minLength,omitempty" yaml:"minLength,omitempty"`
-	Pattern   string       `json:"pattern,omitempty" yaml:"pattern,omitempty"`
-	Enum      []string     `json:"enum,omitempty" yaml:"enum,omitempty"`
-}
+//go:generate enumer -config=./string-format.enum.yaml
 
 var _ JsonSchema = &JsonSchemaString{}
 
-func (t *JsonSchemaString) TypeName() string {
+type JsonSchemaString struct {
+	JsonSchemaCore
+	MinLength        int          `json:"minLength,omitempty" yaml:"minLength,omitempty"`
+	Pattern          string       `json:"pattern,omitempty" yaml:"pattern,omitempty"`
+	MaxLength        int          `json:"maxLength,omitempty" yaml:"maxLength,omitempty"`
+	Format           StringFormat `json:"format,omitempty" yaml:"format,omitempty"`
+	ContentMediaType string       `json:"contentMediaType,omitempty" yaml:"contentMediaType,omitempty"`
+	ContentSchema    string       `json:"contentSchema,omitempty" yaml:"contentSchema,omitempty"`
+	ContentEncoding  string       `json:"contentEncoding,omitempty" yaml:"contentEncoding,omitempty"`
+}
+
+func (t JsonSchemaString) GetId() string {
+	return t.Id
+}
+
+func (t JsonSchemaString) GetType() string {
 	return "string"
 }
 
-func (t *JsonSchemaString) Common() *JsonSchemaCommon {
-	return &t.JsonSchemaCommon
-}
-
 func (t JsonSchemaString) Copy() JsonSchema {
-	return &JsonSchemaString{
-		JsonSchemaCommon: t.Common().Copy(),
-		Format:           t.Format,
-		MaxLength:        t.MaxLength,
+	return JsonSchemaString{
+		JsonSchemaCore:   t.JsonSchemaCore.Copy(),
 		MinLength:        t.MinLength,
 		Pattern:          t.Pattern,
-		Enum:             append(t.Enum),
+		MaxLength:        t.MaxLength,
+		Format:           t.Format,
+		ContentMediaType: t.ContentMediaType,
+		ContentSchema:    t.ContentSchema,
+		ContentEncoding:  t.ContentEncoding,
 	}
-}
-
-func (t *JsonSchemaString) Merge(other JsonSchemaString) {
-	t.Common().Merge(*other.Common())
-	t.Format = mergeSimple(other.Format, t.Format)
-	t.MaxLength = mergeSimple(other.MaxLength, t.MaxLength)
-	t.MinLength = mergeSimple(other.MinLength, t.MinLength)
-	t.Pattern = mergeSimple(other.Pattern, t.Pattern)
-	t.Enum = append(other.Enum, t.Enum...)
 }
 
 func (t JsonSchemaString) Validate() error {
-	if err := t.Common().Validate(); err != nil {
-		return nil
-	}
-
-	if err := validateMaxMin(t.MaxLength, t.MinLength); err != nil {
+	if err := t.JsonSchemaCore.Validate(); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (t *JsonSchemaString) MarshalJSON() ([]byte, error) {
+	dto := struct {
+		Type             string `json:"type"`
+		JsonSchemaString `json:",inline"`
+	}{
+		Type:             t.GetType(),
+		JsonSchemaString: *t,
+	}
+	return json.Marshal(dto)
 }

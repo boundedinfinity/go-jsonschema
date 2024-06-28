@@ -1,67 +1,53 @@
 package idiomatic
 
-import (
-	"github.com/boundedinfinity/go-commoner/idiomatic/mapper"
-	"github.com/boundedinfinity/go-jsonschema/model"
-)
-
-func NewObject() *JsonSchemaObject {
-	schema := &JsonSchemaObject{
-		JsonSchemaCommon: JsonSchemaCommon{
-			Schema: model.SCHEMA_VERSION_2020_12,
-			Type:   "object",
-		},
-		Properties: mapper.Mapper[string, JsonSchema]{},
-	}
-
-	return schema
-}
-
-type JsonSchemaObject struct {
-	JsonSchemaCommon
-	Properties    mapper.Mapper[string, JsonSchema] `json:"properties" yaml:"properties"`
-	MaxProperties int64                             `json:"maxProperties" yaml:"maxProperties"`
-	MinProperties int64                             `json:"minProperties" yaml:"minProperties"`
-}
-
 var _ JsonSchema = &JsonSchemaObject{}
 
-func (t JsonSchemaObject) TypeName() string {
-	return "boolean"
-}
-
-func (t *JsonSchemaObject) Common() *JsonSchemaCommon {
-	return &t.JsonSchemaCommon
+type JsonSchemaObject struct {
+	JsonSchemaCore
+	Properties            map[string]JsonSchema `json:"properties,omitempty" yaml:"properties,omitempty"`
+	PatternProperties     map[string]JsonSchema `json:"patternProperties,omitempty" yaml:"patternProperties,omitempty"`
+	AdditionalProperties  map[string]JsonSchema `json:"additionalProperties,omitempty" yaml:"additionalProperties,omitempty"`
+	PropertyNames         JsonSchema            `json:"propertyNames,omitempty" yaml:"propertyNames,omitempty"`
+	DependentSchemas      map[string]JsonSchema `json:"dependentSchemas,omitempty" yaml:"dependentSchemas,omitempty"`
+	MaxProperties         int                   `json:"maxProperties,omitempty" yaml:"maxProperties,omitempty"`
+	MinProperties         int                   `json:"minProperties,omitempty" yaml:"minProperties,omitempty"`
+	DependentRequired     map[string][]string   `json:"dependentRequired,omitempty" yaml:"dependentRequired,omitempty"`
+	Required              []string              `json:"required,omitempty" yaml:"required,omitempty"`
+	UnevaluatedProperties JsonSchema            `json:"unevaluatedProperties,omitempty" yaml:"unevaluatedProperties,omitempty"`
 }
 
 func (t JsonSchemaObject) Copy() JsonSchema {
-	schema := &JsonSchemaObject{
-		JsonSchemaCommon: t.Common().Copy(),
-		MaxProperties:    t.MaxProperties,
-		MinProperties:    t.MinProperties,
-		Properties:       make(mapper.Mapper[string, JsonSchema]),
+	dependentRequireds := map[string][]string{}
+	for k, v := range t.DependentRequired {
+		dependentRequireds[k] = v[:]
 	}
 
-	for name, property := range t.Properties {
-		schema.Properties[name] = property.Copy()
+	return JsonSchemaObject{
+		JsonSchemaCore:        t.JsonSchemaCore.Copy(),
+		Properties:            copySchemaMap(t.Properties),
+		PatternProperties:     copySchemaMap(t.PatternProperties),
+		AdditionalProperties:  copySchemaMap(t.AdditionalProperties),
+		PropertyNames:         t.PropertyNames.Copy(),
+		DependentSchemas:      copySchemaMap(t.DependentSchemas),
+		MaxProperties:         t.MaxProperties,
+		MinProperties:         t.MinProperties,
+		DependentRequired:     dependentRequireds,
+		Required:              t.Required[:],
+		UnevaluatedProperties: t.UnevaluatedProperties.Copy(),
 	}
+}
 
-	return schema
+func (t JsonSchemaObject) GetId() string {
+	return t.Id
+}
+
+func (t JsonSchemaObject) GetType() string {
+	return "object"
 }
 
 func (t JsonSchemaObject) Validate() error {
-	if err := validateMaxMinProperties(t.MaxProperties, t.MinProperties); err != nil {
+	if err := t.JsonSchemaCore.Validate(); err != nil {
 		return err
-	}
-
-	if t.Properties == nil {
-		return model.ErrJsonSchemaObjectPropertiesMissing
-	}
-
-	for _, property := range t.Properties {
-		if err := property.Validate(); err != nil {
-			return err
-		}
 	}
 
 	return nil

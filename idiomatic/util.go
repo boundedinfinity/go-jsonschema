@@ -22,8 +22,9 @@ func validateMultipleOf[T number](v int) error {
 		return model.ErrJsonSchemaNumberMultipleOfInvalidv(v)
 	}
 
-	return nil
-}
+// 	if min < 0 {
+// 		return model.ErrJsonSchemaArrayMinContainsInvalidv("%v", min)
+// 	}
 
 func validateMaxMinContains[T number](max, min T) error {
 	if max < 0 {
@@ -38,8 +39,9 @@ func validateMaxMinContains[T number](max, min T) error {
 		return model.ErrJsonSchemaArrayInvalidMaxMinv(min, max)
 	}
 
-	return nil
-}
+// 	if min < 0 {
+// 		return model.ErrJsonSchemaStringMinLengthv("%v", min)
+// 	}
 
 func validateMaxMinLength[T number](max, min T) error {
 	if max < 0 {
@@ -54,8 +56,9 @@ func validateMaxMinLength[T number](max, min T) error {
 		return model.ErrJsonSchemaStringMaxMinLengthv(max, min)
 	}
 
-	return nil
-}
+// 	if min < 0 {
+// 		return model.ErrJsonSchemaObjectMinPropertiesv("%v", min)
+// 	}
 
 func validateMaxMinProperties[T number](max, min T) error {
 	if max < 0 {

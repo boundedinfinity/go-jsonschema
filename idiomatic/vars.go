@@ -1,4 +1,4 @@
-package model
+package idiomatic
 
 const (
 	SCHEMA_VERSION_2020_12 = "https://json-schema.org/draft/2020-12/schema"

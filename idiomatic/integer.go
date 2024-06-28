@@ -1,36 +1,33 @@
 package idiomatic
 
-import "github.com/boundedinfinity/go-jsonschema/model"
+import (
+	"encoding/json"
 
-func NewInteger() *JsonSchemaInteger {
-	schema := &JsonSchemaInteger{
-		JsonSchemaCommon: JsonSchemaCommon{
-			Schema: model.SCHEMA_VERSION_2020_12,
-			Type:   "integer",
-		},
-	}
-
-	return schema
-}
-
-type JsonSchemaInteger struct {
-	JsonSchemaCommon
-	ExclusiveMaximum int `json:"exclusiveMaximum" yaml:"exclusiveMaximum"`
-	ExclusiveMinimum int `json:"exclusiveMinimum" yaml:"exclusiveMinimum"`
-	Maximum          int `json:"maximum" yaml:"maximum"`
-	Minimum          int `json:"minimum" yaml:"minimum"`
-	MultipleOf       int `json:"multipleOf" yaml:"multipleOf"`
-}
+	"github.com/boundedinfinity/go-commoner/errorer"
+)
 
 var _ JsonSchema = &JsonSchemaInteger{}
 
-func (t JsonSchemaInteger) TypeName() string {
+type JsonSchemaInteger struct {
+	JsonSchemaCore
+	ExclusiveMaximum int `json:"exclusiveMaximum,omitempty" yaml:"exclusiveMaximum,omitempty"`
+	ExclusiveMinimum int `json:"exclusiveMinimum,omitempty" yaml:"exclusiveMinimum,omitempty"`
+	Maximum          int `json:"maximum,omitempty" yaml:"maximum,omitempty"`
+	Minimum          int `json:"minimum,omitempty" yaml:"minimum,omitempty"`
+	MultipleOf       int `json:"multipleOf,omitempty" yaml:"multipleOf,omitempty"`
+}
+
+func (t JsonSchemaInteger) GetId() string {
+	return t.Id
+}
+
+func (t JsonSchemaInteger) GetType() string {
 	return "integer"
 }
 
 func (t JsonSchemaInteger) Copy() JsonSchema {
 	return &JsonSchemaInteger{
-		JsonSchemaCommon: t.Common().Copy(),
+		JsonSchemaCore:   t.JsonSchemaCore.Copy(),
 		ExclusiveMaximum: t.ExclusiveMaximum,
 		ExclusiveMinimum: t.ExclusiveMinimum,
 		Maximum:          t.Maximum,
@@ -39,22 +36,33 @@ func (t JsonSchemaInteger) Copy() JsonSchema {
 	}
 }
 
-func (t *JsonSchemaInteger) Common() *JsonSchemaCommon {
-	return &t.JsonSchemaCommon
-}
+var (
+	ErrJsonSchemaIntegerMultipleOfLessThan1 = errorer.New("multipleOf less than zero")
+)
 
 func (t JsonSchemaInteger) Validate() error {
-	if err := t.Common().Validate(); err != nil {
+	if err := t.JsonSchemaCore.Validate(); err != nil {
 		return nil
 	}
 
-	if err := validateMultipleOf[int](t.MultipleOf); err != nil {
+	if err := validateMultipleOf(t.MultipleOf, ErrJsonSchemaIntegerMultipleOfLessThan1); err != nil {
 		return err
 	}
 
-	if err := validateMaxMin(t.Maximum, t.Minimum); err != nil {
-		return err
-	}
+	// if err := validateMaxMin(t.Maximum, t.Minimum); err != nil {
+	// 	return err
+	// }
 
 	return nil
+}
+
+func (t *JsonSchemaInteger) MarshalJSON() ([]byte, error) {
+	dto := struct {
+		Type              string `json:"type"`
+		JsonSchemaInteger `json:",inline"`
+	}{
+		Type:              t.GetType(),
+		JsonSchemaInteger: *t,
+	}
+	return json.Marshal(dto)
 }

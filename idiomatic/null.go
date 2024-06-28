@@ -1,42 +1,50 @@
 package idiomatic
 
-import "github.com/boundedinfinity/go-jsonschema/model"
-
-func NewNull() *JsonSchemaNull {
-	schema := &JsonSchemaNull{
-		JsonSchemaCommon: JsonSchemaCommon{
-			Schema: model.SCHEMA_VERSION_2020_12,
-			Type:   "null",
-		},
-	}
-
-	return schema
-}
-
-type JsonSchemaNull struct {
-	JsonSchemaCommon
-}
+import "encoding/json"
 
 var _ JsonSchema = &JsonSchemaNull{}
 
-func (t JsonSchemaNull) TypeName() string {
-	return "null"
+type JsonSchemaNull struct {
+	JsonSchemaCore
 }
 
-func (t *JsonSchemaNull) Common() *JsonSchemaCommon {
-	return &t.JsonSchemaCommon
+func (t JsonSchemaNull) GetId() string {
+	return t.Id
+}
+
+func (t JsonSchemaNull) GetType() string {
+	return "null"
 }
 
 func (t JsonSchemaNull) Copy() JsonSchema {
 	return &JsonSchemaNull{
-		JsonSchemaCommon: t.Common().Copy(),
+		JsonSchemaCore: t.JsonSchemaCore.Copy(),
 	}
 }
 
 func (t JsonSchemaNull) Validate() error {
-	if err := t.Common().Validate(); err != nil {
+	if err := t.JsonSchemaCore.Validate(); err != nil {
 		return nil
 	}
 
+	// if err := validateMultipleOf(t.MultipleOf); err != nil {
+	// 	return err
+	// }
+
+	// if err := validateMaxMin(t.Maximum, t.Minimum); err != nil {
+	// 	return err
+	// }
+
 	return nil
+}
+
+func (t *JsonSchemaNull) MarshalJSON() ([]byte, error) {
+	dto := struct {
+		Type           string `json:"type"`
+		JsonSchemaNull `json:",inline"`
+	}{
+		Type:           t.GetType(),
+		JsonSchemaNull: *t,
+	}
+	return json.Marshal(dto)
 }
